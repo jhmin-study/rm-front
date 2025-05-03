@@ -1,10 +1,10 @@
 import MainPage from "@/pages/MainPage.vue";
-import WorkSpacePage from "@/pages/WorkSpacePage.vue";
+import WorkPlacePage from "@/pages/WorkPlacePage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [ 
     {path:'/' ,  component : MainPage },
-    {path:'/workspace', component : WorkSpacePage}
+    {path:'/workplace', component : WorkPlacePage}
 ];
 const router = createRouter({
     history : createWebHistory() , 
