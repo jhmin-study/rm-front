@@ -2,6 +2,7 @@
   <form class="container" @submit.prevent="onSubmit">
 
     <div class="resourceId">{{ resourceId }}</div>
+    
     <div class="user">
       <p>사용자 이름</p>
       <input @input="onUserInput" type="text" :value="user">
