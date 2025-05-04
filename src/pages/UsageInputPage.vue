@@ -1,12 +1,14 @@
 <template>
 <!--header-->
 <main>
-<UsageInputPage :is-edit="false"/>
+<UsageComponent :is-edit="false"/>
 </main>
 <!--footer---->
 </template>
 
 <script setup>
+
+import UsageComponent from '@/assets/components/UsageComponent.vue';
 
 </script>
 
