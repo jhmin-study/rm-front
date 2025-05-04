@@ -1,15 +1,13 @@
 <template>
 <!--header-->
-<main @submit.prevent="onSubmit">
-  
+<main>
+<UsageInputPage :is-edit="false"/>
 </main>
 <!--footer---->
 </template>
 
 <script setup>
-function onSubmit(){
-  
-}
+
 </script>
 
 <style scoped>
