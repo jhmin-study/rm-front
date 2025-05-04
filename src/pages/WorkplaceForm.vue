@@ -1,14 +1,58 @@
 <template>
   <div>
-    <h2>{{ isEdit ? '사업장 수정' : '사업장 등록' }}</h2>
-    <form @submit.prevent="handleSubmit">
-      <input v-model="form.businessName" placeholder="사업장명" required />
-      <input v-model="form.businessTypeNm" placeholder="사업장 유형" required />
-      <input v-model="form.businessRegNo" placeholder="사업자등록번호" required />
-      <input v-model="form.address" placeholder="주소" required />
-      <input v-model="form.phoneNumber" placeholder="연락처" />
-      <button type="submit">{{ isEdit ? '수정' : '등록' }}</button>
-    </form>
+    <h1>{{ isEdit ? '사업장 수정' : '사업장 등록' }}</h1>
+    <main>
+      <form class="create-workplace-form" @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <label for="business-type-nm">사업장 유형</label>
+          <input v-model="form.businessTypeNm" type="text" id="business-type-nm" placeholder="작업장 유형을 입력하세요.(EX:볼링장, 스터디카페)">
+        </div>
+
+        <div class="form-group">
+          <label for="business-reg-no">사업자 번호</label>
+          <input v-model="form.businessRegNo" type="text" id="business-reg-no" placeholder="사업자 번호를 입력하세요.">
+        </div>
+
+        <div class="form-group">
+          <label for="business-name">사업장 명</label>
+          <input v-model="form.businessName" type="text" id="business-name" placeholder="작업장 이름을 입력하세요.">
+        </div>
+
+        <div class="form-group">
+          <label for="owner-name">사업자명</label>
+          <input v-model="form.ownerName" type="text" id="owner-name" placeholder="사업자이름을 입력하세요.">
+        </div>
+
+        <div class="form-group">
+          <label for="phone-number">사업자 전화번호</label>
+          <input v-model="form.phoneNumber" type="text" id="phone-number" placeholder="사업자전화번호를 입력하세요.">
+        </div>
+
+        <div class="form-group">
+          <label for="address">사업장 주소</label>
+          <input v-model="form.address" type="text" id="address" placeholder="사업장 주소를 입력하세요.">
+        </div>
+
+        <div class="form-group">
+          <label for="detail-address">사업장 상세주소</label>
+          <input v-model="form.detailAddress" type="text" id="detail-address" placeholder="사업장 상세주소를 입력하세요.">
+        </div>
+
+        <div class="form-group">
+          <label for="status">사업장 상태</label>
+          <select v-model="form.status">
+            <option disabled value="">다음 중 하나를 선택하세요</option>
+            <option value="ACTIVE">활성화</option>
+            <option value="INACTIVE">비활성화</option>
+            <option value="DELETED">삭제됨</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="effect-button">{{ isEdit ? '수정하기' : '작업장 만들기' }}</button>
+        </div>
+      </form>
+    </main>
   </div>
 </template>
 
@@ -16,8 +60,16 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const urlParams = new URLSearchParams(window.location.search);
-const isEdit = ref(!!urlParams.get('id'));
+// ✅ 라우터에서 props로 넘어온 workplaceId 받기
+const props = defineProps({
+  workplaceId: {
+    type: String,
+    required: false
+  }
+});
+
+const isEdit = ref(!!props.workplaceId);
+
 const form = ref({
   workplaceId: null,
   businessName: '',
@@ -25,9 +77,12 @@ const form = ref({
   businessRegNo: '',
   address: '',
   phoneNumber: '',
+  ownerName: '',
+  detailAddress: '',
+  status: ''
 });
 
-const serviceKey = 'YOUR_SERVICE_KEY'; // 실제 키로 교체 필요
+const serviceKey = 'YOUR_SERVICE_KEY'; // 실제 키로 교체
 
 const validateBusinessNumber = async () => {
   const cleanedNumber = form.value.businessRegNo.replace(/[^0-9]/g, '');
@@ -59,14 +114,13 @@ const handleSubmit = async () => {
 
   try {
     if (isEdit.value) {
-      await axios.put(`/api/workplace/${form.value.workplaceId}`, form.value);
+      await axios.put(`/api/workplace/${props.workplaceId}`, form.value);
     } else {
       await axios.post('/api/workplace', form.value);
     }
 
-    // 부모창 새로고침
     if (window.opener && !window.opener.closed) {
-      window.opener.location.reload();
+      window.opener.location.reload(); // 또는 fetchWorkplaces()
     }
 
     window.close();
@@ -76,14 +130,26 @@ const handleSubmit = async () => {
 };
 
 onMounted(async () => {
-  const id = urlParams.get('id');
-  if (id) {
+  if (isEdit.value) {
     try {
-      const res = await axios.get(`/api/workplace/${id}`);
-      form.value = res.data;
+      //const res = await axios.get(`/api/workplace/${props.workplaceId}`);
+      //form.value = res.data;
+      // 백엔드 준비 전 임시 더미 데이터
+      form.value = {
+        workplaceId: props.workplaceId,
+        businessName: '하늘 모텔',
+        businessTypeNm: '모텔',
+        businessRegNo: '123-45-67890',
+        address: '전남 나주시 하늘로 123',
+        phoneNumber: '061-123-4567',
+        ownerName: '김사장',
+        detailAddress: '2층 201호',
+        status: 'ACTIVE'
+      };
     } catch (e) {
       console.error('데이터 불러오기 실패:', e);
     }
   }
 });
 </script>
+

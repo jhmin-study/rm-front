@@ -10,6 +10,7 @@
         <p>{{ workplace.address }}</p>
         <div class="card-buttons">
           <button @click="editWorkplace(workplace.workplaceId)">수정</button>
+          <button @click="goToResourceList(workplace.workplaceId)">자원관리</button>
           <button @click="deleteWorkplace(workplace.workplaceId)">삭제</button>
         </div>
       </div>
@@ -19,7 +20,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
+
+const router = useRouter();
+
+const goToResourceList = (id) => {
+  router.push(`/workplace/${id}`);
+};
 
 const workplaces = ref([
   {
@@ -55,8 +63,7 @@ const fetchWorkplaces = async () => {
 };
 
 const editWorkplace = (id) => {
-  const popup = window.open(`/#/workplace/${id}`, '_blank', 'width=800,height=700');
-  if (!popup) alert("팝업 차단이 감지되었습니다. 팝업을 허용해주세요.");
+  router.push(`/workplace/update/${id}`);
 };
 
 const deleteWorkplace = async (id) => {
@@ -71,8 +78,7 @@ const deleteWorkplace = async (id) => {
 };
 
 const openPopupForCreate = () => {
-  const popup = window.open('/#/workplace/new', '_blank', 'width=800,height=700');
-  if (!popup) alert("팝업 차단이 감지되었습니다. 팝업을 허용해주세요.");
+  router.push('/workplace/new');
 };
 
 onMounted(fetchWorkplaces);
