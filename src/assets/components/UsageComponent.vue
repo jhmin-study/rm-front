@@ -27,7 +27,7 @@
 import { defineProps,ref } from "vue";
 import { useRoute } from "vue-router";
 
-const route = useRoute();
+const route = useRoute();U
 const props = defineProps({isEdit:Boolean})
 
 const resourceId = ref('');
@@ -86,7 +86,7 @@ function createUsage(){
 }
 
 function updateUsage(){
-  
+
 }
 </script>
 
