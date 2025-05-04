@@ -50,10 +50,10 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const props = defineProps({isEdit:Boolean})
+const props = defineProps({isEdit:Boolean, usageInfo:Object})
 
 const resourceId = ref(route.params.resourceId);
-const resourceStatus = ref('');
+const resourceStatus = ref(props.isEdit ? props.usageInfo.resourceStatus : 'default');
 const statusErrMsg = ref('');
 const user = ref('');
 const userErrMsg = ref('');
