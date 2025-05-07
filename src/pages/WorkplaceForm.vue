@@ -132,20 +132,8 @@ const handleSubmit = async () => {
 onMounted(async () => {
   if (isEdit.value) {
     try {
-      //const res = await axios.get(`/api/workplace/${props.workplaceId}`);
-      //form.value = res.data;
-      // 백엔드 준비 전 임시 더미 데이터
-      form.value = {
-        workplaceId: props.workplaceId,
-        businessName: '하늘 모텔',
-        businessTypeNm: '모텔',
-        businessRegNo: '123-45-67890',
-        address: '전남 나주시 하늘로 123',
-        phoneNumber: '061-123-4567',
-        ownerName: '김사장',
-        detailAddress: '2층 201호',
-        status: 'ACTIVE'
-      };
+      const res = await axios.get(`/api/workplace/${props.workplaceId}`);
+      form.value = res.data;
     } catch (e) {
       console.error('데이터 불러오기 실패:', e);
     }
