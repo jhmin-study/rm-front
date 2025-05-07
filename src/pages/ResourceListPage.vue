@@ -13,6 +13,7 @@
       <th>User Phone</th>
       <th>Start</th>
       <th>End</th>
+      <th> </th>
   </tr>
   </thead>
   <tbody>
@@ -24,6 +25,7 @@
       <td>(713) 123-8965</td>
       <td>01/13/1979</td>
       <td>01/13/1979</td>
+      <td><button>조회</button></td>
   </tr>
   </tbody>
   </table>

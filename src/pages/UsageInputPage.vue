@@ -1,15 +1,15 @@
 <template>
 <!--header-->
-<main @submit.prevent="onSubmit">
-  
+<main>
+<UsageComponent :is-edit="false"/>
 </main>
 <!--footer---->
 </template>
 
 <script setup>
-function onSubmit(){
-  
-}
+
+import UsageComponent from '@/assets/components/UsageComponent.vue';
+
 </script>
 
 <style scoped>
