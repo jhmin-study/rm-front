@@ -1,7 +1,7 @@
 <template>
 <!--header---->
 <main>
-  <UsageComponent :is-edit="true" />
+  <UsageComponent :is-edit="true" :usage-info="usageInfo"/>
 </main>
 <!--footer-->
 </template>
@@ -10,15 +10,18 @@
 
 import UsageComponent from '@/assets/components/UsageComponent.vue';
 import axios from 'axios';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const usageInfo = ref(null);
+
 onMounted(async()=>{
   try{
     const res = await axios.get(`http://localhost/api/usage/${route.params.resourceId}`)
-  }catch{
-
+    usageInfo.value = res.data;
+  }catch(err){
+    alert('오류 발생!');
   }
 }
 )

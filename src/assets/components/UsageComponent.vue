@@ -4,6 +4,7 @@
     <div class="resourceId">{{ resourceId }}</div>
     <div class="place">별관</div>
     <div class="status">
+      <p>상태</p>
       <select v-model="resourceStatus" id="status">
         <option disabled value="default">===선택===</option>
         <option value="reserved">예약</option>
@@ -53,15 +54,15 @@ const router = useRouter();
 const props = defineProps({isEdit:Boolean, usageInfo:Object})
 
 const resourceId = ref(route.params.resourceId);
-const resourceStatus = ref(props.isEdit ? props.usageInfo.resourceStatus : 'default');
+const resourceStatus = ref(props.isEdit ? props.usageInfo.usageStatus : 'default');
 const statusErrMsg = ref('');
-const user = ref('');
+const user = ref(props.usageInfo?.resourceUserName);
 const userErrMsg = ref('');
-const phone = ref('');
+const phone = ref(props.usageInfo?.resourceUserPhone);
 const phoneErrMsg = ref('');
-const email = ref('');
+const email = ref(props.usageInfo?.resourceUserEmail);
 const userNote = ref('');
-const usageSt = ref('');
+const usageSt = ref(props.usageInfo?.resourceUserNote);
 const usageEd = ref('');
 
 function onUserInput(e){
@@ -112,15 +113,14 @@ function onSubmit(){
     if(!props.isEdit){
       createUsage();
     }else{
-      return true;
-      // updateUsage();
+      updateUsage();
     }
   }
 }
 
 async function createUsage(){
   try{
-    let res = await axios.post(`http://localhost/api/usage/${route.params.resourceId}`,{
+    let res = await axios.put(`http://localhost:8003/api/usage/${route.params.resourceId}`,{
       usageStatus:resourceStatus.value,
       resourceUserName:user.value,
       resourceUserPhone:phone.value,
@@ -138,9 +138,28 @@ async function createUsage(){
   }
 }
 
-// function updateUsage(){
+async function updateUsage(){
+  try{
+    let res = await axios.put(`http://localhost:8003/api/${route.params.resourceId}`,{
+      usageStatus:resourceStatus.value,
+      resourceUserName:user.value,
+      resourceUserPhone:phone.value,
+      resourceUserEmail:email.value,
+      resourceUserNote:userNote.value,
+      usageSt:usageSt.value,
+      usageEd:usageEd.value
+    }
+  )
+    if(res.data=="성공"){
+      alert('수정 완료!');
+    }else{
+      alert('수정 실패')
+    }
+  }catch(err){
+    alert('오류 발생!');
+  }
+}
 
-// }
 </script>
 
 <style scoped>

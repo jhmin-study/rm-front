@@ -6,7 +6,7 @@
   <table>
   <thead>
   <tr>
-      <th><RouterLink>Resource ID</RouterLink></th>
+      <th>Resource ID</th>
       <th>Place</th>
       <th>Status</th>
       <th>User Name</th>
@@ -18,7 +18,7 @@
   </thead>
   <tbody>
   <tr>
-      <td>1</td>
+      <td><RouterLink to="/workplace/:workplaceId/:resourceId">1</RouterLink></td>
       <td>별관</td>
       <td>사용중</td>
       <td>홍길동</td>
