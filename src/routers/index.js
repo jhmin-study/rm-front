@@ -6,6 +6,8 @@ import UsageInputPage from "@/pages/UsageInputPage.vue";
 import { createRouter, createWebHistory  } from "vue-router";
 import WorkplaceList from '@/pages/WorkplaceList.vue';
 import WorkplaceForm from '@/pages/WorkplaceForm.vue';
+import UsageUpdatePage from "@/pages/UsageUpdatePage.vue";
+import UsageReadPage from "@/pages/UsageReadPage.vue";
 
 const routes = [ 
     {path:'/' ,  component : MainPage },
@@ -14,7 +16,9 @@ const routes = [
     { path: '/workplace/new', component: WorkplaceForm },
     { path: '/workplace/update/:workplaceId', component: WorkplaceForm, props: true },
     {path:'/workplace/:workplaceId', component : ResourceListPage},
+    {path:'/workplace/:workplaceId/:resourceId', component : UsageReadPage},
     {path:'/workplace/:workplaceId/:resourceId/input', component : UsageInputPage},
+    {path:'/workplace/:workplaceId/:resourceId/update', component : UsageUpdatePage},
     { path: '/', redirect: '/workplaces' }
 ];
 const router = createRouter({
