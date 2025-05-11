@@ -9,6 +9,7 @@ import WorkplaceForm from '@/pages/WorkplaceForm.vue';
 import LoginPage from "@/pages/LoginPage.vue";
 import UsageUpdatePage from "@/pages/UsageUpdatePage.vue";
 import UsageReadPage from "@/pages/UsageReadPage.vue";
+import SignupPage from "@/pages/SignupPage.vue";
 
 const routes = [ 
     {path:'/' ,  component : MainPage },
@@ -21,6 +22,7 @@ const routes = [
     {path:'/workplace/:workplaceId/:resourceId/input', component : UsageInputPage},
     { path: '/', redirect: '/workplaces' },
     { path: '/login', component : LoginPage },
+    { path: '/signup', component : SignupPage },
     {path:'/workplace/:workplaceId/:resourceId/update', component : UsageUpdatePage},
     { path: '/', redirect: '/workplaces' }
 ];
