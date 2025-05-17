@@ -107,7 +107,7 @@
     
     <!-- 하단메뉴 -->
     <div>
-      <p>계정이 이미 있으신가요?<RouterLink>로그인 하기</RouterLink>
+      <p>계정이 이미 있으신가요?<RouterLink to="/login">로그인 하기</RouterLink>
       </p>
     </div>
   </main>
