@@ -20,13 +20,30 @@
   <tbody>
   <tr v-for="resource in resourceList" :key="resource.resourceId">
     <td><RouterLink to="/resource/:resourceId">{{ resource.resourceId }}</RouterLink></td>
-    <td>{{ resource.resourceName }}</td>
-    <td>{{ resource.place }}</td>
-    <td>{{ resource.usageStatus}}</td>
-    <td>{{resource.resourceUserName}}</td>
-    <td>{{resource.resourceUserPhone}}</td>
-    <td>{{resource.usageSt}}</td>
-    <td>{{resource.usageEd}}</td>
+    <td @click="startEdit(resource, 'name')">
+      <input type="text" v-if="resource.editingField == 'name'"
+      v-model="resource.tempName"
+      @keyup.enter.stop.prevent="submitEdit(resource)"
+      @blur="cancelEdit(resource)">
+      <span>
+        {{ resource.resourceName }}
+      </span>
+    </td>
+    <td @click="startEdit(resource, 'place')">
+      <input type="text"
+      v-if="startEdit(resource, 'place')"
+      v-model="resource.tempPlace"
+      @keyup.enter.stop.prevent="submitEdit(resource)"
+      @blur="cancelEdit(resource)">
+      <span>
+        {{ resource.place }}
+      </span>
+    </td>
+    <td>{{ resource.resourceUsage.usageStatus}}</td>
+    <td>{{resource.resourceUsage.resourceUserName}}</td>
+    <td>{{resource.resourceUsage.resourceUserPhone}}</td>
+    <td>{{resource.resourceUsage.usageSt}}</td>
+    <td>{{resource.resourceUsage.usageEd}}</td>
     <td><button>조회</button></td>
   </tr>
   <tr v-if="addMode">
@@ -95,7 +112,7 @@ function saveResource(){
 
 async function createResource(){
   try{
-    const res = await axios.post(`http://localhost:8001/api/resource/${route.params.workplaceId}`,{
+    const res = await axios.post(`http://localhost:8003/api/workplace/${route.params.workplaceId}`,{
       resourceName:name.value,
       place:place.value
     }
@@ -106,11 +123,60 @@ async function createResource(){
   }catch(err){
     alert('오류발생');
   }
+}
+
+function startEdit(resource, field) {
+  resource.editingField = field;
+  resource.tempName = resource.resourceName;
+  resource.tempPlace = resource.place;
+}
+
+function cancelEdit(resource){
+  resource.editingField = null;
+}
+
+async function submitEdit(resource){
+  const confirmed = confirm('정말 수정하시겠습니까?');
+  if(!confirmed){
+    cancelEdit(resource);
+    return;
+  }
+
+  try{
+    const res = await axios.put(`http://localhost:8003/api/workplace/${route.params.workplaceId}`,
+      {
+        resourceName:resource.tempName,
+        place:resource.tempPlace
+      }
+    )
+    if(res.data=="성공"){
+      resource.resourceName = resource.tempName,
+      resource.place = resource.tempPlace;
+    }else{
+      alert('수정 실패');
+    }
+  }catch(err){
+    alert('오류 발생');
+  }
 
   onMounted(async()=>{
     try{
-      const res = await axios.get(`http://localhost:8001/api/resource/${route.params.workplaceId}`);
-      resourceList.value = res.data;
+      const res = await axios.get(`http://localhost:8003/api/workplace/${route.params.workplaceId}`);
+      resourceList.value = res.data.map(resource => {
+      if (resource.resourceUsage == null) {
+        resource.resourceUsage = {
+          usageStatus: '',
+          resourceUserName: '',
+          resourceUserPhone: '',
+          usageSt: '',
+          usageEd: ''
+        };
+      }
+      resource.editingField = null;
+      resource.tempName = '';
+      resource.tempPlace = '';
+      return resource;
+    });
     }catch(err){
       alert('오류 발생!');
     }
