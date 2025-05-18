@@ -77,7 +77,7 @@
       <!--        이름, 휴대폰번호 -->
       <div class="from-group">
         <label for="userNm">이름</label>
-        <input :value="userNm" type="text" id="userNm">
+        <input v-model="userNm" type="text" id="userNm">
         <span class="errMsg">{{ userNmErrMsg }}</span>
       </div>
       <div class="form-group">
@@ -91,9 +91,9 @@
       </div>
     </form>
     <!-- STEP3. SMS 인증 -->
-    <!-- TODO : 인증API는 검토 후 추후 개발. -->
-    <!--        배포 전까지는 alert 창에서 인증번호 제공하는 것으로 대체함. -->
     <!-- 본인인증 컴포넌트 분리 -->
+    <!-- @success : 본인인증 성공 시 발생되는 이벤트 -->
+    <!-- @ -->
     <IdVerifyComponent  v-if="stpe2_flag"
                         @success="verifySuccess"
                         @fail="vefiryFail"/>
@@ -174,23 +174,23 @@ function submitUserInfo() {
 // STEP3. 인증번호 확인
 // 성공 시
 async function verifySuccess() {
-    let res = await axios.post('http://localhost:8003/api/user/signup', {
-      userId:   userId.value,
-      password: password.value,
-      userNm:   userNm.value,
-      userPhno: userPhno.value,
-      signupDt: new Date()
-    });
-    if (res.data == 'success') {
-      alert('회원가입 성공');
-      // Login Page로 이동
-      router.push('/login');
-    } else {
-      alert('회원가입 실패.. 콘솔 로그를 확인해주세요.');
-      console.log(res.data);
-      return false;
-    }
-    return true;
+  let res = await axios.post('http://localhost:8003/api/user/signup', {
+    userId: userId.value,
+    password: password.value,
+    userNm: userNm.value,
+    userPhno: userPhno.value,
+    signupDt: new Date()
+  });
+  if (res.data == 'success') {
+    alert('회원가입 성공');
+    // Login Page로 이동
+    router.push('/login');
+  } else {
+    alert('회원가입 실패.. 콘솔 로그를 확인해주세요.');
+    console.log(res.data);
+    return false;
+  }
+  return true;
 }
 
 // 실패 시
