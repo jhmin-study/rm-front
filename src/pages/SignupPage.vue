@@ -77,12 +77,12 @@
       <!--        이름, 휴대폰번호 -->
       <div class="from-group">
         <label for="userNm">이름</label>
-        <input @input="onInputUserNm" :value="userNm" type="text" id="userNm">
+        <input :value="userNm" type="text" id="userNm">
         <span class="errMsg">{{ userNmErrMsg }}</span>
       </div>
       <div class="form-group">
         <label for="userPhno">휴대 전화번호('-'는 제외하고 작성)</label>
-        <input @input="CheckValidateUserPhno" v-model="userPhno" type="text" id="userPhno">
+        <input v-model="userPhno" type="text" id="userPhno">
         <span class="errMsg">{{ userPhnoErrMsg }}</span>
       </div>
       <!-- 확인 버튼 -->
@@ -93,16 +93,10 @@
     <!-- STEP3. SMS 인증 -->
     <!-- TODO : 인증API는 검토 후 추후 개발. -->
     <!--        배포 전까지는 alert 창에서 인증번호 제공하는 것으로 대체함. -->
-    <form action="" @submit.prevent="checkAuthNo" v-if="stpe2_flag">
-      <div class="form-group">
-        <label for="authNo">인증번호</label>
-        <input v-model="inputAuthNo" type="text" id="authNo">
-      </div>
-      <div class="form-group">
-        <button type="submit" class="effect-button">인증</button>
-      </div>
-    </form>
-
+    <!-- 본인인증 컴포넌트 분리 -->
+    <IdVerifyComponent  v-if="stpe2_flag"
+                        @success="verifySuccess"
+                        @fail="vefiryFail"/>
     <!-- TODO - 이메일, 비밀번호 검증 후 휴대폰 인증 도입하기 -->
     
     <!-- 하단메뉴 -->
@@ -114,6 +108,7 @@
   <!-- Fotter -->
 </template>
 <script setup>
+import IdVerifyComponent from '@/assets/components/IdVerifyComponent.vue';
 import router from '@/routers';
 import axios from 'axios';
 import { ref } from 'vue';
@@ -139,8 +134,8 @@ const isValidPassword = ref(false); // 비밀번호 검사
 const isValidUserNm = ref(false); // 회원명 유효성 검사
 const isValidUserPhno = ref(false); // 전화번호 유효성 검사
 
-const authNo = ref(''); // 인증번호
-const inputAuthNo = ref(''); // 입력한 인증번호
+// const authNo = ref(''); // 인증번호
+// const inputAuthNo = ref(''); // 입력한 인증번호
 
 // ============================= 함수 선언부 ==================================
 // STEP1. ID, PW 입력후 제출 -> ID 중복여부 검사
@@ -165,14 +160,9 @@ async function checkId() {
 
 // STEP2. 회원정보 작성 후 인증
 function submitUserInfo() {
-  // TODO : 회원정보 작성 후 인증API 호출
-  // TODO : 인증API는 검토 후 추후 개발.
-  // 배포 전까지는 alert 창에서 인증번호 제공하는 것으로 대체함.
-  // 인증번호 : 난수로 생성하여 백엔드 거치지 않고 인증처리함.
-  // 인증번호 형식 : 6자리 숫자
+  checkValidateUserNm();
+  CheckValidateUserPhno();
   if (isValidUserNm.value && isValidUserPhno.value) {
-    authNo.value = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
-    alert('인증번호 :' + authNo.value);
     stpe2_flag.value = true;
     return true;
   } else {
@@ -181,20 +171,9 @@ function submitUserInfo() {
   }
 }
 
-// 이름 binding 함수
-function onInputUserNm(e) {
-  userNm.value = e.target.value;
-  console.log("userNm : " + userNm.value);
-  checkValidateUserNm();
-}
-
 // STEP3. 인증번호 확인
-async function checkAuthNo() {
-  // 인증번호 확인
-  if (authNo.value === inputAuthNo.value) {
-    alert('인증 성공');
-    // TODO : 인증 성공 후 회원가입 API 호출
-    // 회원가입 API 호출
+// 성공 시
+async function verifySuccess() {
     let res = await axios.post('http://localhost:8003/api/user/signup', {
       userId:   userId.value,
       password: password.value,
@@ -209,10 +188,16 @@ async function checkAuthNo() {
     } else {
       alert('회원가입 실패.. 콘솔 로그를 확인해주세요.');
       console.log(res.data);
+      return false;
     }
-  } else {
-    alert('인증번호가 일치하지 않습니다.');
-  }
+    return true;
+}
+
+// 실패 시
+// STEP2로 돌아감.
+function vefiryFail() {
+  alert('인증번호가 일치하지 않습니다.');
+  stpe2_flag.value = false;
 }
 
 // ============================= 유효성 검사 함수 =============================
