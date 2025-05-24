@@ -82,35 +82,35 @@ const form = ref({
   status: ''
 });
 
-const serviceKey = 'YOUR_SERVICE_KEY'; // 실제 키로 교체
+// const serviceKey = 'YOUR_SERVICE_KEY'; // 실제 키로 교체
 
-const validateBusinessNumber = async () => {
-  const cleanedNumber = form.value.businessRegNo.replace(/[^0-9]/g, '');
-  const data = { b_no: [cleanedNumber] };
-  try {
-    const res = await axios.post(
-      `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${serviceKey}`,
-      data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      }
-    );
-    return res.data.data[0]?.b_stt === '계속사업자';
-  } catch (e) {
-    console.error('유효성 검사 오류:', e);
-    return false;
-  }
-};
+// const validateBusinessNumber = async () => {
+//   const cleanedNumber = form.value.businessRegNo.replace(/[^0-9]/g, '');
+//   const data = { b_no: [cleanedNumber] };
+//   try {
+//     const res = await axios.post(
+//       `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${serviceKey}`,
+//       data,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Accept: 'application/json',
+//         },
+//       }
+//     );
+//     return res.data.data[0]?.b_stt === '계속사업자';
+//   } catch (e) {
+//     console.error('유효성 검사 오류:', e);
+//     return false;
+//   }
+// };
 
 const handleSubmit = async () => {
-  const valid = await validateBusinessNumber();
-  if (!valid) {
-    alert('유효하지 않은 사업자등록번호입니다.');
-    return;
-  }
+  // const valid = await validateBusinessNumber();
+  // if (!valid) {
+  //   alert('유효하지 않은 사업자등록번호입니다.');
+  //   return;
+  // }
 
   try {
     if (isEdit.value) {
