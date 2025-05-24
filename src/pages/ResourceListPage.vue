@@ -18,7 +18,22 @@
   </tr>
   </thead>
   <tbody>
-  <tr v-for="resource in resourceList" :key="resource.resourceId">
+    <tr v-if="addMode">
+    <td></td>
+    <td>
+      <input @keyup.enter="saveResource" @input="onResourceName" :value="name" placeholder="예시: 사물함1" type="text">
+    </td>
+    <td>
+      <input @keyup.enter="saveResource" @input="onPlaceName" :value="place" placeholder="위치한 장소 입력 (예: 본관, 동원관 등)" type="text">
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><button @click="saveResource">추가</button></td>
+  </tr>
+  <tr v-else v-for="resource in resourceList" :key="resource.resourceId">
     <td><RouterLink to="/resource/:resourceId">{{ resource.resourceId }}</RouterLink></td>
     <td @click="startEdit(resource, 'name')">
       <input type="text" v-if="resource.editingField == 'name'"
@@ -44,22 +59,8 @@
     <td>{{resource.resourceUsage.resourceUserPhone}}</td>
     <td>{{resource.resourceUsage.usageSt}}</td>
     <td>{{resource.resourceUsage.usageEd}}</td>
-    <td><button>조회</button></td>
-  </tr>
-  <tr v-if="addMode">
-    <td></td>
-    <td>
-      <input @keyup.enter="saveResource" @input="onResourceName" :value="name" placeholder="예시: 사물함1" type="text">
-    </td>
-    <td>
-      <input @keyup.enter="saveResource" @input="onPlaceName" :value="place" placeholder="위치한 장소 입력 (예: 본관, 동원관 등)" type="text">
-    </td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><button @click="saveResource">추가</button></td>
+    <td v-if="resource.resourceUsage.usageStatus==''"><RouterLink to="/resource/:resourceId/input"><button>추가</button></RouterLink></td>
+    <td v-else><button>조회</button></td>
   </tr>
   </tbody>
   </table>
@@ -109,16 +110,43 @@ function saveResource(){
     alert('빈칸이 있으면 안 됩니다.');
   }
 }
+async function loadResourceList(){
+  try{
+    const res = await axios.get(`http://localhost:8003/api/resource/${route.params.workplaceId}`);
+    resourceList.value = res.data.map(resource => {
+    if (resource.resourceUsage == null) {
+      resource.resourceUsage = {
+        usageStatus: '',
+        resourceUserName: '',
+        resourceUserPhone: '',
+        usageSt: '',
+        usageEd: ''
+      };
+    }
+    resource.editingField = null;
+    resource.tempName = '';
+    resource.tempPlace = '';
+    return resource;
+  });
+  }catch(err){
+    alert('오류 발생!');
+  }
+}
 
 async function createResource(){
   try{
-    const res = await axios.post(`http://localhost:8003/api/workplace/${route.params.workplaceId}`,{
+    const res = await axios.post(`http://localhost:8003/api/resource/${route.params.workplaceId}`,{
       resourceName:name.value,
       place:place.value
     }
     )
     if(res.data!='성공'){
       alert('자원 추가 실패');
+    }else{
+      await loadResourceList();
+      name.value = '';
+      place.value = '';
+      addMode.value = false;
     }
   }catch(err){
     alert('오류발생');
@@ -143,7 +171,7 @@ async function submitEdit(resource){
   }
 
   try{
-    const res = await axios.put(`http://localhost:8003/api/workplace/${route.params.workplaceId}`,
+    const res = await axios.put(`http://localhost:8003/api/resource/${route.params.workplaceId}`,
       {
         resourceName:resource.tempName,
         place:resource.tempPlace
@@ -158,28 +186,8 @@ async function submitEdit(resource){
   }catch(err){
     alert('오류 발생');
   }
-
-  onMounted(async()=>{
-    try{
-      const res = await axios.get(`http://localhost:8003/api/workplace/${route.params.workplaceId}`);
-      resourceList.value = res.data.map(resource => {
-      if (resource.resourceUsage == null) {
-        resource.resourceUsage = {
-          usageStatus: '',
-          resourceUserName: '',
-          resourceUserPhone: '',
-          usageSt: '',
-          usageEd: ''
-        };
-      }
-      resource.editingField = null;
-      resource.tempName = '';
-      resource.tempPlace = '';
-      return resource;
-    });
-    }catch(err){
-      alert('오류 발생!');
-    }
+  onMounted(()=>{
+    loadResourceList();
   })
 }
 

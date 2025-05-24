@@ -29,6 +29,27 @@
     <p>사용 종료일 입력</p>
     {{ usageInfo.usageEd }}
   </div>
+  <button><RouterLink to="/resource/:resourceId/input">사용자 명단 추가</RouterLink></button>
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>User Name</th>
+        <th>User Phone</th>
+        <th>Start</th>
+        <th>End</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>{{  }}</th>
+        <th>{{  }}</th>
+        <th>{{  }}</th>
+        <th>{{  }}</th>
+        <th>{{  }}</th>
+      </tr>
+    </tbody>
+  </table>
 </main>
 <!--footer-->
 </template>

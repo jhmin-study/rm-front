@@ -120,7 +120,7 @@ function onSubmit(){
 
 async function createUsage(){
   try{
-    let res = await axios.put(`http://localhost:8003/api/usage/${route.params.resourceId}`,{
+    let res = await axios.post(`http://localhost:8003/api/usage/${route.params.resourceId}`,{
       usageStatus:resourceStatus.value,
       resourceUserName:user.value,
       resourceUserPhone:phone.value,
