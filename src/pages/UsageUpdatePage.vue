@@ -18,7 +18,7 @@ const usageInfo = ref(null);
 
 onMounted(async()=>{
   try{
-    const res = await axios.get(`http://localhost/api/usage/${route.params.resourceId}`)
+    const res = await axios.get(`http://localhost:8003/api/usage/${route.params.resourceId}`)
     usageInfo.value = res.data;
   }catch(err){
     alert('오류 발생!');

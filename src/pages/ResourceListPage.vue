@@ -101,9 +101,6 @@ async function loadResourceList() {
           usageEd: ''
         };
       }
-      resource.editingField = null;
-      resource.tempName = '';
-      resource.tempPlace = '';
       return resource;
     });
   } catch (err) {

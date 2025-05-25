@@ -2,7 +2,8 @@
   <form class="container" @submit.prevent="onSubmit">
 
     <div class="resourceId">{{ resourceId }}</div>
-    <div class="place">별관</div>
+    <div class="resource-name">이름: {{resourceName}}</div>
+    <div class="place">위치: {{ place }}</div>
     <div class="status">
       <p>상태</p>
       <select v-model="resourceStatus" id="status">
@@ -51,9 +52,11 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const props = defineProps({isEdit:Boolean, usageInfo:Object})
+const props = defineProps({isEdit:Boolean, resourceInfo:Object, usageInfo:Object})
 
 const resourceId = ref(route.params.resourceId);
+const resourceName = ref(props.resourceInfo.resourceName);
+const place = ref(props.resourceInfo.place);
 const resourceStatus = ref(props.isEdit ? props.usageInfo.usageStatus : 'default');
 const statusErrMsg = ref('');
 const user = ref(props.usageInfo?.resourceUserName);
