@@ -62,6 +62,7 @@ async function submitLogin() {
     console.log(res);
     // 토큰을 로컬 스토리지에 저장
     localStorage.setItem('token', res.headers.getAuthorization());
+    localStorage.setItem('userId', res.data.userId);
     router.push('/');
   } catch (error) {
     // 로그인 실패시 에러메시지 출력
