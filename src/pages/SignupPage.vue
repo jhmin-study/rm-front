@@ -95,6 +95,9 @@
     <!-- @success : 본인인증 성공 시 발생되는 이벤트 -->
     <!-- @ -->
     <IdVerifyComponent  v-if="stpe2_flag"
+                        :user-id="userId"
+                        :user-nm="userNm"
+                        :user-phno="userPhno"
                         @success="verifySuccess"
                         @fail="vefiryFail"/>
     <!-- TODO - 이메일, 비밀번호 검증 후 휴대폰 인증 도입하기 -->
@@ -144,7 +147,6 @@ async function checkId() {
   if (!isValidId.value || !isValidPassword.value) {
     return false;
   }
-  console.log(userId.value + ' ' + password.value);
   // DB에 ID 중복여부 검사
   const res = await axios.post('http://localhost:8003/api/user/checkId',
                                 { userId: userId.value });

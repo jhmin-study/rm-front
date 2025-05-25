@@ -59,6 +59,7 @@ async function submitLogin() {
     alert('로그인 성공');
     // 로그인 성공 시
     console.log(res.headers.getAuthorization());
+    console.log(res);
     // 토큰을 로컬 스토리지에 저장
     localStorage.setItem('token', res.headers.getAuthorization());
     router.push('/');
