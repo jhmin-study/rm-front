@@ -116,13 +116,13 @@ const handleSubmit = async () => {
    }
 
    // ✅ 개발 중 임시 userId 하드코딩
-  form.value.userId = 'example@gmail.com'; 
+  // form.value.userId = 'trigunho@naver.com'; 
 
   try {
     if (isEdit.value) {
-      await axios.put(`/api/workplace/${props.workplaceId}`, form.value);
+      await axios.put(`/api/workplace/${props.workplaceId}`, form.value, {headers:{Authorization: localStorage.getItem('token')}});
     } else {
-      await axios.post('/api/workplace', form.value);
+      await axios.post('/api/workplace', form.value, {headers:{Authorization: localStorage.getItem('token')}});
     }
 
     router.push('/workplaces'); // ✅ 작업장 목록으로 이동
