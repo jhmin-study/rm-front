@@ -58,7 +58,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; // ✅ 추가
 import axios from 'axios';
+
+const router = useRouter(); // ✅ 추가
 
 // ✅ 라우터에서 props로 넘어온 workplaceId 받기
 const props = defineProps({
@@ -82,35 +85,38 @@ const form = ref({
   status: ''
 });
 
-// const serviceKey = 'YOUR_SERVICE_KEY'; // 실제 키로 교체
+   const serviceKey = 'ptjf2sY3Y2xVYb2lSqJFg19EwvV4IytfAnfp4xnNJoXN4J9ofsAjYaqUVZ4Q9WyIxUBua14fRQuX6AP6VThCVQ%3D%3D'; // 실제 키로 교체
 
-// const validateBusinessNumber = async () => {
-//   const cleanedNumber = form.value.businessRegNo.replace(/[^0-9]/g, '');
-//   const data = { b_no: [cleanedNumber] };
-//   try {
-//     const res = await axios.post(
-//       `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${serviceKey}`,
-//       data,
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           Accept: 'application/json',
-//         },
-//       }
-//     );
-//     return res.data.data[0]?.b_stt === '계속사업자';
-//   } catch (e) {
-//     console.error('유효성 검사 오류:', e);
-//     return false;
-//   }
-// };
+   const validateBusinessNumber = async () => {
+     const cleanedNumber = form.value.businessRegNo.replace(/[^0-9]/g, '');
+     const data = { b_no: [cleanedNumber] };
+     try {
+       const res = await axios.post(
+         `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${serviceKey}`,
+         data,
+         {
+           headers: {
+             'Content-Type': 'application/json',
+             Accept: 'application/json',
+           },
+         }
+       );
+       return res.data.data[0]?.b_stt === '계속사업자';
+     } catch (e) {
+       console.error('유효성 검사 오류:', e);
+       return false;
+     }
+   };
 
 const handleSubmit = async () => {
-  // const valid = await validateBusinessNumber();
-  // if (!valid) {
-  //   alert('유효하지 않은 사업자등록번호입니다.');
-  //   return;
-  // }
+   const valid = await validateBusinessNumber();
+   if (!valid) {
+     alert('유효하지 않은 사업자등록번호입니다.');
+     return;
+   }
+
+   // ✅ 개발 중 임시 userId 하드코딩
+  form.value.userId = 'example@gmail.com'; 
 
   try {
     if (isEdit.value) {
@@ -119,13 +125,10 @@ const handleSubmit = async () => {
       await axios.post('/api/workplace', form.value);
     }
 
-    if (window.opener && !window.opener.closed) {
-      window.opener.location.reload(); // 또는 fetchWorkplaces()
-    }
-
-    window.close();
+    router.push('/workplaces'); // ✅ 작업장 목록으로 이동
   } catch (error) {
     console.error('저장 오류:', error);
+    alert('작업장 저장 중 오류가 발생했습니다.');
   }
 };
 

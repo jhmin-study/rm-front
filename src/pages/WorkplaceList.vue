@@ -29,7 +29,7 @@ const workplaces = ref([]);
 // 사업장 목록 조회
 const fetchWorkplaces = async () => {
   try {
-    const res = await axios.get('/api/workplace');
+    const res = await axios.get('/api/workplace/user', { params: { userId: 'example@gmail.com' } });
     workplaces.value = res.data;
     console.log('📦 받은 데이터:', workplaces.value);
   } catch (error) {
