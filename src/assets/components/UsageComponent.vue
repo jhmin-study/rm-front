@@ -2,44 +2,45 @@
   <form class="container" @submit.prevent="onSubmit">
 
     <div class="resourceId">{{ resourceId }}</div>
-    <div class="resource-name">이름: {{resourceName}}</div>
-    <div class="place">위치: {{ place }}</div>
-    <div class="status">
-      <p>상태</p>
-      <select v-model="resourceStatus" id="status">
-        <option disabled value="default">===선택===</option>
-        <option value="reserved">예약</option>
-        <option value="occupied">사용</option>
-        <option value="maintenance">수리</option>
-      </select>
-      <p>{{ statusErrMsg }}</p>
-    </div>
-    <div class="user">
-      <p>사용자 이름</p>
-      <input @input="onUserInput" type="text" :value="user" placeholder="사용자 이름을 입력하시오.">
-      <p>{{ userErrMsg }}</p>
-    </div>
-    <div class="phone">
-      <p>사용자 전화번호</p>
-      <input @input="onPhoneInput" type="text" :value="phone" placeholder="사용자 전화번호를 입력하시오.">
-      <p>{{ phoneErrMsg }}</p>
-    </div>
-    <div class="email">
-      <p>사용자 이메일</p>
-      <input v-model="email" type="text" placeholder="사용자 이메일을 입력하시오.">
-    </div>
-    <div class="note">
-      <p>비고란</p>
-      <textarea v-model="userNote" id="userNote" placeholder="내용을 입력하시오."></textarea>
-    </div>
-    <div class="usageSt">
-      <p>사용 시작일 입력</p>
-      <input v-model="usageSt" type="date">
-      <p>사용 종료일 입력</p>
-      <input v-model="usageEd" type="date">
-    </div>
+    <div class="resource-name">이름: {{ resourceUsageInfo?.resourceName}}</div>
+    <div class="place">위치: {{ resourceUsageInfo?.place }}</div>
+      <div class="status">
+        <p>상태</p>
+        <select v-model="resourceStatus" id="status">
+          <option disabled value="default">===선택===</option>
+          <option value="reserved">예약</option>
+          <option value="occupied">사용</option>
+          <option value="maintenance">수리</option>
+        </select>
+        <p>{{ statusErrMsg }}</p>
+      </div>
+      <div class="user">
+        <p>사용자 이름</p>
+        <input @input="onUserInput" type="text" :value="user" placeholder="사용자 이름을 입력하시오.">
+        <p>{{ userErrMsg }}</p>
+      </div>
+      <div class="phone">
+        <p>사용자 전화번호</p>
+        <input @input="onPhoneInput" type="text" :value="phone" placeholder="사용자 전화번호를 입력하시오.">
+        <p>{{ phoneErrMsg }}</p>
+      </div>
+      <div class="email">
+        <p>사용자 이메일</p>
+        <input v-model="email" type="text" placeholder="사용자 이메일을 입력하시오.">
+      </div>
+      <div class="note">
+        <p>비고란</p>
+        <textarea v-model="userNote" id="userNote" placeholder="내용을 입력하시오."></textarea>
+      </div>
+      <div class="usageSt">
+        <p>사용 시작일 입력</p>
+        <input v-model="usageSt" type="date">
+        <p>사용 종료일 입력</p>
+        <input v-model="usageEd" type="date">
+      </div>
 
-
+    
+    
     <button>{{ isEdit ? '수정' : '추가'}}</button>
   </form>
 </template>
@@ -52,21 +53,22 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const props = defineProps({isEdit:Boolean, resourceInfo:Object, usageInfo:Object})
+const props = defineProps({isEdit:Boolean, resourceUsageInfo:Object})
 
 const resourceId = ref(route.params.resourceId);
-const resourceName = ref(props.resourceInfo.resourceName);
-const place = ref(props.resourceInfo.place);
-const resourceStatus = ref(props.isEdit ? props.usageInfo.usageStatus : 'default');
+
+const resourceUsageInfo = ref(null);
+
+const resourceStatus = ref(props.isEdit && resourceUsageInfo.value.resourceUsage ? resourceUsageInfo.value.resourceUsage.usageStatus : 'default');
 const statusErrMsg = ref('');
 const user = ref(props.usageInfo?.resourceUserName);
 const userErrMsg = ref('');
 const phone = ref(props.usageInfo?.resourceUserPhone);
 const phoneErrMsg = ref('');
 const email = ref(props.usageInfo?.resourceUserEmail);
-const userNote = ref('');
+const userNote = ref(props.usageInfo?.resourceUserNote);
 const usageSt = ref(props.usageInfo?.resourceUserNote);
-const usageEd = ref('');
+const usageEd = ref(props.usageInfo?.usageEd);
 
 function onUserInput(e){
   user.value = e.target.value;

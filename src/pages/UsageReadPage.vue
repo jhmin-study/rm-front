@@ -7,34 +7,38 @@
   <h2>404 Error</h2>
 </main>
 <main v-else>
-  <div class="resourceId">{{ resourceId }}</div>
-  <div class="resourceName">{{ usageNresourceInfo.resourceName }}</div>
-  <div class="place">{{ usageNresourceInfo.place }}</div>
-  <div class="status">
-    <p>상태</p>
-    {{ usageNresourceInfo.resourceUsage?.usageStatus }}
+  <div class="resourceId"> Id: {{ resourceId }} </div>
+  <div class="resourceName">
+    <h2>자원 이름: {{ usageNresourceInfo.resourceName }}</h2>
   </div>
-  <div class="user">
-    <p>사용자 이름</p>
-    {{ usageNresourceInfo.resourceUsage?.resourceUserName }}
-  </div>
-  <div class="phone">
-    <p>사용자 전화번호</p>
-    {{ usageNresourceInfo.resourceUsage?.resourceUserPhone }}
-  </div>
-  <div class="email">
-    <p>사용자 이메일</p>
-    {{ usageNresourceInfo.resourceUsage?.resourceUserEmail }}
-  </div>
-  <div class="note">
-    <p>비고란</p>
-    {{ usageNresourceInfo.resourceUsage?.resourceUserNote }}
-  </div>
-  <div class="usageSt">
-    <p>사용 시작일 입력</p>
-    {{ usageNresourceInfo.resourceUsage?.usageSt }}
-    <p>사용 종료일 입력</p>
-    {{ usageNresourceInfo.resourceUsage?.usageEd }}
+  <div class="place">위치: {{ usageNresourceInfo.place }}</div>
+  <div class="resource-user" v-if="usageNresourceInfo.resourceUsage">
+    <div class="status">
+      <p>상태</p>
+      {{ usageNresourceInfo.resourceUsage.usageStatus }}
+    </div>
+    <div class="user">
+      <p>사용자 이름</p>
+      {{ usageNresourceInfo.resourceUsage.resourceUserName }}
+    </div>
+    <div class="phone">
+      <p>사용자 전화번호</p>
+      {{ usageNresourceInfo.resourceUsage.resourceUserPhone }}
+    </div>
+    <div class="email">
+      <p>사용자 이메일</p>
+      {{ usageNresourceInfo.resourceUsage.resourceUserEmail }}
+    </div>
+    <div class="note">
+      <p>비고란</p>
+      {{ usageNresourceInfo.resourceUsage.resourceUserNote }}
+    </div>
+    <div class="usageSt">
+      <p>사용 시작일 입력</p>
+      {{ usageNresourceInfo.resourceUsage.usageSt }}
+      <p>사용 종료일 입력</p>
+      {{ usageNresourceInfo.resourceUsage.usageEd }}
+    </div>
   </div>
   <button><RouterLink :to="`/resource/${resourceId}/input`">사용자 명단 추가</RouterLink></button>
   <table v-if="status2">
@@ -91,6 +95,7 @@ onMounted(
       }
       status.value = "loaded";
       let sul = await axios.get(`http://localhost:8003/api/futureUsage/${route.params.resourceId}`)
+      console.log(sul.data);
       futureUsageInfo.value = sul.data;
       if(futureUsageInfo.value != null && futureUsageInfo.value != ''){
         status2.value = true;
