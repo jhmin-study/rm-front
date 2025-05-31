@@ -10,7 +10,6 @@
 }
 
 .effect-button {
-  width: 100%;
   padding: 14px 20px;
   background-color: #007bff;
   color: white;
@@ -31,4 +30,48 @@
 .effect-button:active {
   background-color: #004494;
   transform: translateY(0);
+}
+
+.dialog-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 기본 버튼 (확인, 저장 등) */
+.dialog-button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.dialog-button.primary:hover {
+  background-color: #0056b3;
+}
+
+.dialog-button.primary:active {
+  background-color: #004494;
+}
+
+/* 보조 버튼 (취소 등) */
+.dialog-button.secondary {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.dialog-button.secondary:hover {
+  background-color: #d5d5d5;
+}
+
+.dialog-button.secondary:active {
+  background-color: #c0c0c0;
+}
+
+/* 접근성 향상을 위한 포커스 스타일 */
+.dialog-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
