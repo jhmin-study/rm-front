@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="container">
     <h2>사업장 목록</h2>
-    <button @click="goToCreatePage">새 사업장 등록</button>
+    <button class="effect-button" @click="goToCreatePage">새 사업장 등록</button>
     <div class="card-container">
       <div class="workplace-card" v-for="workplace in workplaces" :key="workplace.workplaceId">
         <h3>{{ workplace.businessName }}</h3>
@@ -9,9 +9,9 @@
         <p>{{ workplace.businessTypeNm }}</p>
         <p>{{ workplace.address }}</p>
         <div class="card-buttons">
-          <button @click="goToEditPage(workplace.workplaceId)">수정</button>
-          <button @click="goToResourceList(workplace.workplaceId)">자원관리</button>
-          <button @click="deleteWorkplace(workplace.workplaceId)">삭제</button>
+          <button class="dialog-button secondary" @click="goToEditPage(workplace.workplaceId)">수정</button>
+          <button class="dialog-button secondary" @click="goToResourceList(workplace.workplaceId)">자원관리</button>
+          <button class="dialog-button secondary" @click="deleteWorkplace(workplace.workplaceId)">삭제</button>
         </div>
       </div>
     </div>
@@ -68,6 +68,11 @@ onMounted(fetchWorkplaces);
 </script>
 
 <style scoped>
+.container{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -84,7 +89,17 @@ onMounted(fetchWorkplaces);
 
 .card-buttons {
   display: flex;
-  justify-content: space-between;
   margin-top: 10px;
+  gap: 10px;
+}
+
+.card-buttons button{
+  flex-grow: 1;
+  padding: 3px;
+}
+@media (min-width: 600px) {
+  .effect-button{
+    align-self: flex-end;
+  }
 }
 </style>
