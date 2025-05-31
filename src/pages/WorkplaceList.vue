@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <h2>사업장 목록</h2>
+    <div v-show = "workplaces.length == 0">
+        등록된 사업장이 없습니다. 새로 등록해주세요
+    </div>
     <button class="effect-button" @click="goToCreatePage">새 사업장 등록</button>
     <div class="card-container">
       <div class="workplace-card" v-for="workplace in workplaces" :key="workplace.workplaceId">
