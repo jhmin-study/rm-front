@@ -1,29 +1,28 @@
 <template>
-  <form @submit.prevent="sendAuthNo">
+  <form class="login-container" @submit.prevent="()=>{if(sendAuthnoFlag) {checkAuthNo()} else { sendAuthNo()}}">
     <div class="form-group">
       <label for="user-nm">이름</label>
-      <input type="text" id="user-nm" v-model="userNm" placeholder="이름을 입력하세요.">
+      <input type="text" id="user-nm" :disabled="sendAuthnoFlag" v-model="userNm" placeholder="이름을 입력하세요.">
       <p>{{ userNmErrMsg }}</p>
     </div>
     <div class="form-group">
       <label for="user-phno">전화번호</label>
-      <input type="text" id="user-phno" v-model="userPhno" placeholder="전화번호를 입력하세요.">
+      <input type="text" id="user-phno" :disabled="sendAuthnoFlag" v-model="userPhno" placeholder="전화번호를 입력하세요.">
       <p>{{ userPhnoErrMsg }}</p>
     </div>
-    <div class="form-group">
-      <button type="submit" class="effect-button">인증번호 발송</button>
-      <p>{{ sendAuthMsg }}</p>
-    </div>
-  </form>
-  <form @submit.prevent="checkAuthNo" v-if="sendAuthnoFlag">
-    <div class="form-group">
+
+    <div class="form-group" v-if="sendAuthnoFlag">
       <label for="inputAuthNo">인증번호</label>
       <input v-model="inputAuthNo" type="text" id="authNo">
+      <p>{{ sendAuthMsg }}</p>
     </div>
+
     <div class="form-group">
-      <button type="submit" class="effect-button">인증</button>
+      <button type="submit" class="effect-button">{{sendAuthnoFlag ?'인증' : '인증번호 발송'}}</button>
+
     </div>
   </form>
+  
 </template>
 <script setup>
 import axios from 'axios';
@@ -36,17 +35,15 @@ const inputAuthNo = ref(''); // 입력한 인증번호
 const emit = defineEmits(['success', 'fail']);
 
 const props = defineProps({
-  userId: {String, require: true},
-  userNm: {String, require: false, default: ''},
-  userPhno: {String, require: false, default: ''}
+  userId: {String, require: true}
 })
 
 // 회원가입 시 - 이름하고 전화번호는 부모 컴포넌트에서 받아옴.
 // 그 외 업무에서는 사용하지 않음.
 const userId         = ref(props.userId);
-const userNm         = ref(props.userNm);
+const userNm         = ref('');
 const userNmErrMsg   = ref('');
-const userPhno       = ref(props.userPhno);
+const userPhno       = ref('');
 const userPhnoErrMsg = ref('');
 
 const isValidUserNm  = ref(false);
@@ -77,7 +74,6 @@ async function sendAuthNo() {
       }
     } catch (error) {
       console.error(error);
-      sendAuthMsg.value = '인증번호 발송 오류 발생!';
       return false;
     }
   }
@@ -87,7 +83,6 @@ async function sendAuthNo() {
   return true;
 }
 
-// STEP3. 인증번호 확인
 async function checkAuthNo() {
   // 인증번호 확인
   const res = await axios.post('http://localhost:8003/api/user/checkauthno',
@@ -98,10 +93,12 @@ async function checkAuthNo() {
     }
   )
   if (res.data == 'success') {
-    emit('success');
+    emit('success', userNm.value, userPhno.value);
     return true;
   } else {
     emit('fail');
+    sendAuthMsg.value='인증번호가 틀렸습니다.'
+    
     return false;
   }
 }
@@ -133,4 +130,18 @@ function CheckValidateUserPhno() {
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+.form-group{
+  margin-bottom: 1.5rem;
+}
+.effect-button{
+  width: 100%;
+}
+/* 오류 메시지 */
+.errMsg {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  display: block;
+}
+</style>
