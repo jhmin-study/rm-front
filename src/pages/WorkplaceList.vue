@@ -56,7 +56,9 @@ const goToResourceList = (id) => {
 const deleteWorkplace = async (id) => {
   if (confirm('정말 삭제하시겠습니까?')) {
     try {
-      await axios.delete(`/api/workplace/${id}`);
+      await axios.delete(`/api/workplace/${id}`, {
+        headers : {Authorization : localStorage.getItem('token')}
+      });
       await fetchWorkplaces();// 삭제 후 갱신
     } catch (error) {
       console.error('사업장 삭제 중 오류 발생:', error);

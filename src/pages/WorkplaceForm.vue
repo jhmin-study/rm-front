@@ -50,7 +50,8 @@
 
         <div class="form-group btn-group">
           <button type="submit" class="effect-button">{{ isEdit ? '수정하기' : '작업장 만들기' }}</button>
-          <button v-if="isEdit" type="button" class="effect-button delete-button">삭제하기</button>
+          <button v-if="isEdit" type="button" class="effect-button delete-button"
+          @click="deleteWorkplace()">삭제하기</button>
         </div>
       </form>
     </main>
@@ -117,9 +118,6 @@ const handleSubmit = async () => {
      return;
    }
 
-   // ✅ 개발 중 임시 userId 하드코딩
-  // form.value.userId = 'trigunho@naver.com'; 
-
   try {
     if (isEdit.value) {
       await axios.put(`/api/workplace/${props.workplaceId}`, form.value, {headers:{Authorization: localStorage.getItem('token')}});
@@ -147,6 +145,20 @@ onMounted(async () => {
     }
   }
 });
+
+// 삭제
+const deleteWorkplace = async () => {
+  if (confirm('정말 삭제하시겠습니까?')) {
+    try {
+      await axios.delete(`/api/workplace/${props.workplaceId}`, {
+        headers : {Authorization : localStorage.getItem('token')}
+      });
+      router.push('/workplaces');
+    } catch (error) {
+      console.error('사업장 삭제 중 오류 발생:', error);
+    }
+  }
+};
 </script>
 
 <style scoped>
