@@ -48,8 +48,9 @@
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group btn-group">
           <button type="submit" class="effect-button">{{ isEdit ? '수정하기' : '작업장 만들기' }}</button>
+          <button v-if="isEdit" type="button" class="effect-button delete-button">삭제하기</button>
         </div>
       </form>
     </main>
@@ -144,3 +145,89 @@ onMounted(async () => {
 });
 </script>
 
+<style scoped>
+.create-workplace-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+.btn-group{
+  display: flex;
+  column-gap: 20px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.effect-button {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.delete-button{
+  background-color: red;
+}
+
+.effect-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.effect-button:active {
+  background-color: #004494;
+  transform: translateY(0);
+}
+
+h1 {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #222;
+}
+
+@media (max-width: 600px) {
+  .create-workplace-form {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+}
+</style>
