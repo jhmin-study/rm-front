@@ -102,6 +102,7 @@ const form = ref({
            },
          }
        );
+       console.log(res.data);
        return res.data.data[0]?.b_stt === '계속사업자';
      } catch (e) {
        console.error('유효성 검사 오류:', e);
@@ -136,7 +137,10 @@ const handleSubmit = async () => {
 onMounted(async () => {
   if (isEdit.value) {
     try {
-      const res = await axios.get(`/api/workplace/${props.workplaceId}`);
+      const res = await axios.get(`/api/workplace/${props.workplaceId}`, {
+        headers : {Authorization : localStorage.getItem('token')}
+      });
+      console.log(res.data);
       form.value = res.data;
     } catch (e) {
       console.error('데이터 불러오기 실패:', e);
