@@ -6,6 +6,9 @@
     </main>
     <PageFooter/>
   </div>
+  <div class="user-info">
+    유저정보
+  </div>
 </template>
 
 <script setup>
