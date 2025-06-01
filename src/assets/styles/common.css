@@ -8,3 +8,130 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+html, body{
+  height: 100%;
+}
+
+a{
+  text-decoration: none;
+}
+
+.effect-button {
+  padding: 14px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.effect-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.effect-button:active {
+  background-color: #004494;
+  transform: translateY(0);
+}
+
+.dialog-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 기본 버튼 (확인, 저장 등) */
+.dialog-button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.dialog-button.primary:hover {
+  background-color: #0056b3;
+}
+
+.dialog-button.primary:active {
+  background-color: #004494;
+}
+
+/* 보조 버튼 (취소 등) */
+.dialog-button.secondary {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.dialog-button.secondary:hover {
+  background-color: #d5d5d5;
+}
+
+.dialog-button.secondary:active {
+  background-color: #c0c0c0;
+}
+
+/* 접근성 향상을 위한 포커스 스타일 */
+.dialog-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+.btn-group{
+  display: flex;
+  column-gap: 20px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+/* 로그인 / 회원가입에서 사용하는 내용 */
+.main-container{
+  max-width: 400px;
+  margin: auto;
+  padding-top: 150px;
+}
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 24px;
+  color: #333;
+}

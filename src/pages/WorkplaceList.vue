@@ -1,17 +1,22 @@
 <template>
-  <div>
+  <div class="container">
     <h2>사업장 목록</h2>
-    <button @click="goToCreatePage">새 사업장 등록</button>
-    <div class="card-container">
-      <div class="workplace-card" v-for="workplace in workplaces" :key="workplace.workplaceId">
+    <div v-show = "workplaces.length == 0">
+        등록된 사업장이 없습니다. 새로 등록해주세요
+    </div>
+    <button class="effect-button" @click="goToCreatePage">새 사업장 등록</button>
+    <div class="card-container"> 
+      <div class="workplace-card" :class="{'isActive' : workplace.status === 'INACTIVE', 'isDeleted' : workplace.status === 'DELETED'}" 
+      v-for="workplace in workplaces" :key="workplace.workplaceId">
         <h3>{{ workplace.businessName }}</h3>
         <p>{{ workplace.businessRegNo }}</p>
         <p>{{ workplace.businessTypeNm }}</p>
         <p>{{ workplace.address }}</p>
+        <div class="workplace-status"><h6>[{{ workplace.status }}]</h6></div>
         <div class="card-buttons">
-          <button @click="goToEditPage(workplace.workplaceId)">수정</button>
-          <button @click="goToResourceList(workplace.workplaceId)">자원관리</button>
-          <button @click="deleteWorkplace(workplace.workplaceId)">삭제</button>
+          <button class="dialog-button secondary" @click="goToEditPage(workplace.workplaceId)">수정</button>
+          <button class="dialog-button secondary" @click="goToResourceList(workplace.workplaceId)">자원관리</button>
+          <button class="dialog-button secondary" @click="deleteWorkplace(workplace.workplaceId)">삭제</button>
         </div>
       </div>
     </div>
@@ -56,7 +61,9 @@ const goToResourceList = (id) => {
 const deleteWorkplace = async (id) => {
   if (confirm('정말 삭제하시겠습니까?')) {
     try {
-      await axios.delete(`/api/workplace/${id}`);
+      await axios.delete(`/api/workplace/${id}`, {
+        headers : {Authorization : localStorage.getItem('token')}
+      });
       await fetchWorkplaces();// 삭제 후 갱신
     } catch (error) {
       console.error('사업장 삭제 중 오류 발생:', error);
@@ -68,6 +75,10 @@ onMounted(fetchWorkplaces);
 </script>
 
 <style scoped>
+.container{
+  display: flex;
+  flex-direction: column;
+}
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -84,7 +95,30 @@ onMounted(fetchWorkplaces);
 
 .card-buttons {
   display: flex;
-  justify-content: space-between;
   margin-top: 10px;
+  gap: 10px;
+}
+
+.card-buttons button{
+  flex-grow: 1;
+  padding: 3px;
+}
+
+@media (min-width: 600px) {
+  .effect-button{
+    align-self: flex-end;
+  }
+}
+
+.isActive {
+  background-color: lightgrey;
+}
+
+.isDeleted {
+  background-color: lightpink;
+}
+
+.workplace-status {
+  display: inline;
 }
 </style>

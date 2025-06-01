@@ -48,8 +48,10 @@
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group btn-group">
           <button type="submit" class="effect-button">{{ isEdit ? '수정하기' : '작업장 만들기' }}</button>
+          <button v-if="isEdit" type="button" class="effect-button delete-button"
+          @click="deleteWorkplace()">삭제하기</button>
         </div>
       </form>
     </main>
@@ -101,6 +103,7 @@ const form = ref({
            },
          }
        );
+       console.log(res.data);
        return res.data.data[0]?.b_stt === '계속사업자';
      } catch (e) {
        console.error('유효성 검사 오류:', e);
@@ -115,9 +118,7 @@ const handleSubmit = async () => {
      return;
    }
 
-   // ✅ 개발 중 임시 userId 하드코딩
-  // form.value.userId = 'trigunho@naver.com'; 
-
+  form.value.businessRegNo = form.value.businessRegNo.replace(/[^0-9]/g, '');//'-' 를 빈공백으로 변경
   try {
     if (isEdit.value) {
       await axios.put(`/api/workplace/${props.workplaceId}`, form.value, {headers:{Authorization: localStorage.getItem('token')}});
@@ -135,12 +136,115 @@ const handleSubmit = async () => {
 onMounted(async () => {
   if (isEdit.value) {
     try {
-      const res = await axios.get(`/api/workplace/${props.workplaceId}`);
+      const res = await axios.get(`/api/workplace/${props.workplaceId}`, {
+        headers : {Authorization : localStorage.getItem('token')}
+      });
+      console.log(res.data);
       form.value = res.data;
     } catch (e) {
       console.error('데이터 불러오기 실패:', e);
     }
   }
 });
+
+// 삭제
+const deleteWorkplace = async () => {
+  if (confirm('정말 삭제하시겠습니까?')) {
+    try {
+      await axios.delete(`/api/workplace/${props.workplaceId}`, {
+        headers : {Authorization : localStorage.getItem('token')}
+      });
+      router.push('/workplaces');
+    } catch (error) {
+      console.error('사업장 삭제 중 오류 발생:', error);
+    }
+  }
+};
 </script>
 
+<style scoped>
+.create-workplace-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+.btn-group{
+  display: flex;
+  column-gap: 20px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.effect-button {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.delete-button{
+  background-color: red;
+}
+
+.effect-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.effect-button:active {
+  background-color: #004494;
+  transform: translateY(0);
+}
+
+h1 {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #222;
+}
+
+@media (max-width: 600px) {
+  .create-workplace-form {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+}
+</style>
