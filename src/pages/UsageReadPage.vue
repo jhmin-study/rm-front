@@ -9,9 +9,12 @@
 <main v-else>
   <div class="resourceId"> Id: {{ resourceId }} </div>
   <div class="resourceName">
-    <h2>자원 이름: {{ usageNresourceInfo.resourceName }}</h2>
+    <h3>자원 이름: {{ usageNresourceInfo.resourceName }}</h3>
   </div>
   <div class="place">위치: {{ usageNresourceInfo.place }}</div>
+  <div class="button-wrapper">
+    <RouterLink :to="`/resource/${resourceId}/update`"><button class="edit-btn">사용자 정보 수정</button></RouterLink>
+  </div>
   <div class="resource-user" v-if="usageNresourceInfo.resourceUsage">
     <div class="status">
       <p>상태</p>
@@ -40,7 +43,7 @@
       {{ usageNresourceInfo.resourceUsage.usageEd }}
     </div>
   </div>
-  <button><RouterLink :to="`/resource/${resourceId}/input`">사용자 명단 추가</RouterLink></button>
+  <button class="addUser"><RouterLink :to="`/resource/${resourceId}/input`">예약자 추가</RouterLink></button>
   <div class="reservation"  v-if="status2">
     <p>예약자 명단</p>
     <table>
@@ -52,6 +55,7 @@
           <th>User Note</th>
           <th>Start</th>
           <th>End</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -62,10 +66,12 @@
           <td>{{ future.resourceUserNote }}</td>
           <td>{{ future.usageSt }}</td>
           <td>{{ future.usageEd }}</td>
+          <td><RouterLink :to="`/resource/${resourceId}/update`"><button class="modify-btn">수정</button></RouterLink></td>
         </tr>
       </tbody>
     </table>
   </div>
+  <RouterLink :to="`/workplace/${usageNresourceInfo.workplaceId}`"><button class="back-to-list">목록으로</button></RouterLink>
 </main>
 <!--footer-->
 </template>
@@ -115,8 +121,95 @@ body {
   background: #f5f5f5
 }
 
+/* 사용자 정보 박스 전체 스타일 */
+.resourceId,
+.resourceName,
+.place,
+.resource-user {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+.edit-btn {
+  background-color: #ffffff;
+  border: solid 1px #ddd;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  color: #0c64d8;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.edit-btn:hover {
+  background-color: #43a047;
+  color: white;
+}
+
+.edit-btn a {
+  text-decoration: none;
+  color: #0c64d8;
+  font-weight: bold;
+}
+
+
+/* 내부 항목 정돈 */
+.resource-user > div {
+  margin-bottom: 0.5rem;
+}
+
+/* 항목 이름 강조 */
+.resource-user p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+/* 사용자 명단 추가 버튼 - 고유 클래스 기반 */
+.addUser {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.addUser:hover {
+  background-color: #43a047;
+}
+
+.addUser a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+/* 예약자 명단 제목 스타일 */
+.reservation > p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.5rem;
+  border-left: 4px solid #4CAF50;
+  background-color: #f1f8f4;
+  color: #2e7d32;
+}
+
 table {
-  border: 1px #a39485 solid;
   font-size: .9em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
   width: 100%;
@@ -132,8 +225,8 @@ thead {
   font-weight: bold;
   color: #000000;
   background: #ffffff;
-  border-top: #000000 solid 2px;
-  border-bottom: #000000 solid 2px;
+  border-top: #000000 solid 1px;
+  border-bottom: #000000 solid 1px;
 }
 
 td,
@@ -200,4 +293,38 @@ a {
 
 
 }
+.modify-btn {
+  background-color: #e0e0e0; /* 연한 회색 배경 */
+  border: 1px solid #bdbdbd; /* 테두리 */
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem; /* 더 얇고 작게 */
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  font-size: 0.8rem;
+  color: #424242; /* 짙은 회색 글씨 */
+}
+
+.modify-btn:hover {
+  background-color: #d6d6d6;
+  border-color: #9e9e9e;
+}
+.back-to-list {
+  display: block;
+  margin: 2rem auto 0 auto; /* 위 여백 + 가운데 정렬 */
+  padding: 0.6rem 1.8rem;
+  font-size: 0.9rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  max-width: 200px;
+}
+
+.back-to-list:hover {
+  background-color: #e0e0e0;
+  border-color: #999;
+}
+
 </style>

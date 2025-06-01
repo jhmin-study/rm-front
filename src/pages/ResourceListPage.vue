@@ -1,8 +1,7 @@
 <template>
-  <!--header-->
   <main>
-    <h1>자원: </h1>
-    <h3>관리 테이블</h3>
+    <h2>자원 관리 테이블</h2>
+    <br>
     <table>
       <thead>
         <tr>
@@ -37,13 +36,12 @@
           <td></td>
           <td></td>
           <td></td>
-          <td><button @click="saveResource">추가</button></td>
+          <td><button class="save-btn" @click="saveResource">추가</button></td>
         </tr>
       </tbody>
     </table>
-    <button @click="addMode = true">+</button>
+    <button class="add-mode" @click="addMode = true">+</button>
   </main>
-  <!--footer-->
 </template>
 
 <script setup>
@@ -207,7 +205,7 @@ th {
 thead {
   font-weight: bold;
   color: #fff;
-  background: #73685d;
+  background: #2c3e50;
 }
 
 td,
@@ -274,4 +272,57 @@ a {
 
 
 }
+/* 추가 버튼 스타일 (오른쪽 아래 + 버튼) */
+.add-mode {
+  margin-top: 1rem;
+  background-color: #e0e0e0;
+  color: #424242;
+  border: 1px solid #bdbdbd;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-mode:hover {
+  background-color: #d0d0d0;
+}
+
+/* 입력행의 추가 버튼 (tr 안에 있는 '추가' 텍스트 버튼) */
+.save-btn{
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  background-color: #bdbdbd;
+  color: #212121;
+  border: 1px solid #9e9e9e;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+  background-color: #9e9e9e;
+}
+
+input[type="text"] {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 95%;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+  border-color: #90a4ae;
+  box-shadow: 0 0 3px rgba(144, 164, 174, 0.5);
+  outline: none;
+}
+
 </style>
