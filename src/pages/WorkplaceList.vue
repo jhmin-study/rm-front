@@ -76,7 +76,6 @@ onMounted(fetchWorkplaces);
 .container{
   display: flex;
   flex-direction: column;
-  padding: 20px;
 }
 .card-container {
   display: grid;

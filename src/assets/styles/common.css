@@ -9,6 +9,14 @@
   box-sizing: border-box;
 }
 
+html, body{
+  height: 100%;
+}
+
+a{
+  text-decoration: none;
+}
+
 .effect-button {
   padding: 14px 20px;
   background-color: #007bff;
@@ -108,7 +116,8 @@
 /* 로그인 / 회원가입에서 사용하는 내용 */
 .main-container{
   max-width: 400px;
-  margin: 80px auto;
+  margin: auto;
+  padding-top: 150px;
 }
 .login-container {
   max-width: 400px;

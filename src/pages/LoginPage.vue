@@ -23,6 +23,13 @@
         <p>비밀번호를 잊으셨나요?<RouterLink>비밀번호 찾기</RouterLink></p>
       </div>
     </div>
+    <DialogPopup
+    :visible="showDialog"
+    title="로그인 성공"
+    message="로그인을 성공 했습니다!"
+    button-text="확인"
+    @close="()=>{showDialog=false; router.push('/');}"
+    />
   </div>
   
 
@@ -32,12 +39,15 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import router from '@/routers';
+import DialogPopup from '@/components/DialogPopup.vue';
 
 
 const loginId = ref('');        // 입력한 ID(이메일)
 const loginPassword = ref('');  // 입력한 비밀번호
 // const user = ref(null);         // 로그인한 사용자 객체
 const loginErrMsg = ref('');    // 로그인 에러 메시지
+
+const showDialog = ref(false);
 
 // 로그인 처리 함수
 async function submitLogin() {
@@ -55,14 +65,14 @@ async function submitLogin() {
       userId: loginId.value,
       password: loginPassword.value
     });
-    alert('로그인 성공');
+    showDialog.value = true;
     // 로그인 성공 시
     console.log(res.headers.getAuthorization());
     console.log(res);
     // 토큰을 로컬 스토리지에 저장
     localStorage.setItem('token', res.headers.getAuthorization());
     localStorage.setItem('userId', res.data.userId);
-    router.push('/');
+    
   } catch (error) {
     // 로그인 실패시 에러메시지 출력
     if (error.response.status == 401) {

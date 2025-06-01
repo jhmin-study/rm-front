@@ -11,6 +11,7 @@ import UsageUpdatePage from "@/pages/UsageUpdatePage.vue";
 import UsageReadPage from "@/pages/UsageReadPage.vue";
 import SignupPage from "@/pages/SignupPage.vue";
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
+import MyPage from "@/pages/MyPage.vue";
 
 
 const routes = [ 
@@ -27,6 +28,7 @@ const routes = [
             { path: 'resource/:resourceId', component: UsageReadPage },
             { path: 'resource/:resourceId/input', component: UsageInputPage },
             { path: 'resource/:resourceId/update', component: UsageUpdatePage },
+            { path: 'my-page', component: MyPage },
         ]
     },
 

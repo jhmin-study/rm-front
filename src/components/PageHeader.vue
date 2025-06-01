@@ -1,9 +1,11 @@
 <template>
   <header>
     <!-- RM 로고(상단 좌측) -->
-    <div class="logo">
-      LOGO
-    </div>
+     <router-link to="/">
+       <div class="logo">
+         LOGO
+       </div>
+     </router-link>
     <!-- 접속자 이름, 로그아웃 버튼(상단 우측)  -->
     <div class="user-info">
       
@@ -62,8 +64,47 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.logo {
-  border-radius: 0;
-  border-color: solid 3px black;
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #2c3e50;
+  padding: 15px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* 좌측 로고 */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* 우측 유저 정보 */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* 사용자 이름 스타일 */
+.user-name {
+  font-size: 16px;
+}
+
+/* 로그아웃 버튼 스타일 */
+.logout button {
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logout button:hover {
+  background-color: #c0392b;
+}
+
 </style>

@@ -87,11 +87,19 @@
       <p>계정이 이미 있으신가요?<RouterLink to="/login">로그인 하기</RouterLink>
       </p>
     </div>
+    <DialogPopup
+      :visible="showDialog"
+      title="^q^ 회원가입 완료! ^p^"
+      message="RM에 회원가입 하신 것을 환영합니다! RM은 사장님의 자원을 효율적으로 관리해줍니다!"
+      button-text="자원 관리하러 가기"
+      @close="()=>{showDialog = false; router.push('/login');}"
+    />
   </div>
 </template>
 <script setup>
 import IdVerifyComponent from '@/assets/components/IdVerifyComponent.vue';
 import StepIndicator from '@/assets/components/StepIndicator.vue';
+import DialogPopup from '@/components/DialogPopup.vue';
 import router from '@/routers';
 import axios from 'axios';
 import { computed, ref } from 'vue';
@@ -110,6 +118,8 @@ const passwordCondition3 = ref(false); // 비밀번호 조건3 - 영문사와 �
 
 const isValidId = ref(false); // ID 유효성 검사
 const isValidPassword = ref(false); // 비밀번호 검사
+
+const showDialog = ref(false);
 
 // const authNo = ref(''); // 인증번호
 // const inputAuthNo = ref(''); // 입력한 인증번호
@@ -147,9 +157,8 @@ async function verifySuccess(userName, userPhoneNumber) {
     signupDt: new Date()
   });
   if (res.data == 'success') {
-    alert('회원가입 성공');
-    // Login Page로 이동
-    router.push('/login');
+    showDialog.value = true;
+    
   } else {
     alert('회원가입 실패.. 콘솔 로그를 확인해주세요.');
     console.log(res.data);
