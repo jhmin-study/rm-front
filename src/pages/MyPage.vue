@@ -4,7 +4,6 @@
   </div>
   <div class="user-profile" v-else>
     <div class="card-header">
-      <button class="back-button" @click="goBack"> &#8592;</button>
       <h2 class="title">{{userInfo.userNm}}</h2>
     </div>
     <div class="info-item">
@@ -45,12 +44,11 @@ async function getUserInfo(){
 }
 
 onMounted(()=>{
+  console.log('mypage on mounted 됨')
   getUserInfo();
 });
 
-function goBack(){
-  window.history.back();
-}
+
 </script>
 
 <style scoped>
@@ -71,7 +69,7 @@ function goBack(){
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .title {
@@ -133,24 +131,6 @@ function goBack(){
 
 .password-btn:hover {
   background-color: #1e8449;
-}
-
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  color: #333;
-  font-size: 22px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.back-button:hover {
-  background-color: #e0e0e0;
 }
 
 
