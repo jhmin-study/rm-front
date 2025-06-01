@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <RouterLink :to="`/resource/${resourceId}`">{{ resource.resourceId }}</RouterLink>
+      <RouterLink :to="`/resource/${resource.resourceId}`">{{ resource.resourceId }}</RouterLink>
     </td>
     <td >
       <input v-if="isNameEditing" type="text" @keydown.enter="onPutRequestEnter('resourceName')" @blur="onNameInputBlur" :value="resourceName" @input="onNameInput">
@@ -23,7 +23,9 @@
     <td v-if="resource.resourceUsage.usageStatus == ''">
       <RouterLink :to="`/resource/${resource.resourceId}/input`"><button>추가</button></RouterLink>
     </td>
-    <td v-else><button>조회</button></td>
+    <td v-else>
+      <RouterLink :to="`/resource/${resource.resourceId}`"><button>조회</button></RouterLink>
+    </td>
   </tr>
 </template>
 

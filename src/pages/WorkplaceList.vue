@@ -6,20 +6,10 @@
     </div>
     <button class="effect-button" @click="goToCreatePage">새 사업장 등록</button>
     <div class="card-container"> 
-      <div class="workplace-card" :class="{'isActive' : workplace.status === 'INACTIVE', 'isDeleted' : workplace.status === 'DELETED'}" 
-      v-for="workplace in workplaces" :key="workplace.workplaceId">
-        <h3>{{ workplace.businessName }}</h3>
-        <p>{{ workplace.businessRegNo }}</p>
-        <p>{{ workplace.businessTypeNm }}</p>
-        <p>{{ workplace.address }}</p>
-        <div class="workplace-status"><h6>[{{ workplace.status }}]</h6></div>
-        <div class="card-buttons">
-          <button class="dialog-button secondary" @click="goToEditPage(workplace.workplaceId)">수정</button>
-          <button class="dialog-button secondary" @click="goToResourceList(workplace.workplaceId)">자원관리</button>
-          <button class="dialog-button secondary" @click="deleteWorkplace(workplace.workplaceId)">삭제</button>
-        </div>
-      </div>
+      <WorkplaceCard v-for="workplace in workplaces" :key="workplace.workplaceId" :workplace="workplace" @delete-workplace="fetchWorkplaces"/>
+
     </div>
+    
   </div>
 </template>
 
@@ -27,6 +17,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import WorkplaceCard from '@/components/WorkplaceCard.vue';
 
 const router = useRouter();
 const workplaces = ref([]);
@@ -42,34 +33,13 @@ const fetchWorkplaces = async () => {
   }
 };
 
+
+
 // 사업장 등록 페이지 이동
 const goToCreatePage = () => {
   router.push('/workplace/new');
 };
 
-// 사업장 수정 페이지 이동
-const goToEditPage = (id) => {
-  router.push(`/workplace/update/${id}`);
-};
-
-// 자원관리 페이지 이동
-const goToResourceList = (id) => {
-  router.push(`/workplace/${id}`);
-};
-
-// 삭제
-const deleteWorkplace = async (id) => {
-  if (confirm('정말 삭제하시겠습니까?')) {
-    try {
-      await axios.delete(`/api/workplace/${id}`, {
-        headers : {Authorization : localStorage.getItem('token')}
-      });
-      await fetchWorkplaces();// 삭제 후 갱신
-    } catch (error) {
-      console.error('사업장 삭제 중 오류 발생:', error);
-    }
-  }
-};
 
 onMounted(fetchWorkplaces);
 </script>
@@ -86,23 +56,6 @@ onMounted(fetchWorkplaces);
   margin-top: 20px;
 }
 
-.workplace-card {
-  border: 1px solid #ccc;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.card-buttons {
-  display: flex;
-  margin-top: 10px;
-  gap: 10px;
-}
-
-.card-buttons button{
-  flex-grow: 1;
-  padding: 3px;
-}
 
 @media (min-width: 600px) {
   .effect-button{
@@ -110,15 +63,4 @@ onMounted(fetchWorkplaces);
   }
 }
 
-.isActive {
-  background-color: lightgrey;
-}
-
-.isDeleted {
-  background-color: lightpink;
-}
-
-.workplace-status {
-  display: inline;
-}
 </style>

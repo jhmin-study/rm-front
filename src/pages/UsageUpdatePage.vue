@@ -8,7 +8,7 @@
     Not Found
   </div>
   <div class="loaded" v-else>
-    <UsageComponent :is-edit="true" :resource-usage-info= "resourceUsageInfo"/>
+    <UsageComponent :is-edit="true" :usage-info= "usageInfo"/>
   </div>
 </main>
 <!--footer-->
@@ -23,7 +23,7 @@ import { useRoute } from 'vue-router';
 
 const status = ref("loading");
 const route = useRoute();
-const resourceUsageInfo = ref(null);
+const usageInfo = ref(null);
 
 
 onMounted(async()=>{
@@ -37,7 +37,8 @@ onMounted(async()=>{
       status.value = "Not Found";
       return;
     }
-    resourceUsageInfo.value = res.data;
+    usageInfo.value = res.data;
+    console.log(usageInfo.value);
     status.value = "loaded"
   }catch(e){
     alert('오류 발생!');

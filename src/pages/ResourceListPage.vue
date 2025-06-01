@@ -90,8 +90,8 @@ function saveResource() {
 }
 async function loadResourceList() {
   try {
-    const res = await axios.get(`http://localhost:8003/api/resource/${route.params.workplaceId}`);
-    resourceList.value = res.data.map(resource => {
+    const res = await axios.get(`http://localhost:8003/api/workplace/${route.params.workplaceId}/resource`);
+    let filteredList =res.data.map(resource => {
       if (resource.resourceUsage == null) {
         resource.resourceUsage = {
           usageStatus: '',
@@ -103,6 +103,9 @@ async function loadResourceList() {
       }
       return resource;
     });
+    resourceList.value = filteredList;
+    // console.log('res.data', res.data);
+    // console.log('list', filteredList)
   } catch (err) {
     alert('오류 발생!');
   }
@@ -110,7 +113,7 @@ async function loadResourceList() {
 
 async function createResource() {
   try {
-    const res = await axios.post(`http://localhost:8003/api/resource/${route.params.workplaceId}`, {
+    const res = await axios.post(`http://localhost:8003/api/workplace/${route.params.workplaceId}/resource`, {
       resourceName: name.value,
       place: place.value
     }
