@@ -51,10 +51,20 @@
         <div class="form-group btn-group">
           <button type="submit" class="effect-button">{{ isEdit ? '수정하기' : '작업장 만들기' }}</button>
           <button v-if="isEdit" type="button" class="effect-button delete-button"
-          @click="deleteWorkplace()">삭제하기</button>
+          @click="deleteConfirm()">삭제하기</button>
         </div>
       </form>
     </main>
+    <DialogPopup
+            :visible="showDialog"
+            title="사업장 삭제"
+            message="정말 삭제하시겠습니까?"
+            dialog-type="confirm"
+            button-confirm-text="확인"
+            button-cancel-text="취소"
+            @confirm="deleteWorkplace()"
+            @cancel ="deleteCancel"
+            />
   </div>
 </template>
 
@@ -62,6 +72,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'; // ✅ 추가
 import axios from 'axios';
+import DialogPopup from '@/components/DialogPopup.vue';
 
 const router = useRouter(); // ✅ 추가
 
@@ -74,6 +85,7 @@ const props = defineProps({
 });
 
 const isEdit = ref(!!props.workplaceId);
+const showDialog = ref(false); // 다이얼로그 창
 
 const form = ref({
   workplaceId: null,
@@ -147,9 +159,18 @@ onMounted(async () => {
   }
 });
 
+// 삭제 confirm 창 보이기
+const deleteConfirm = () => {
+  showDialog.value=true;
+};
+
+const deleteCancel = () => {
+  showDialog.value=false;
+};
+
 // 삭제
 const deleteWorkplace = async () => {
-  if (confirm('정말 삭제하시겠습니까?')) {
+  // if (confirm('정말 삭제하시겠습니까?')) {
     try {
       await axios.delete(`/api/workplace/${props.workplaceId}`, {
         headers : {Authorization : localStorage.getItem('token')}
@@ -158,7 +179,7 @@ const deleteWorkplace = async () => {
     } catch (error) {
       console.error('사업장 삭제 중 오류 발생:', error);
     }
-  }
+  // }
 };
 </script>
 
