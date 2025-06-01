@@ -5,12 +5,14 @@
         등록된 사업장이 없습니다. 새로 등록해주세요
     </div>
     <button class="effect-button" @click="goToCreatePage">새 사업장 등록</button>
-    <div class="card-container">
-      <div class="workplace-card" v-for="workplace in workplaces" :key="workplace.workplaceId">
+    <div class="card-container"> 
+      <div class="workplace-card" :class="{'isActive' : workplace.status === 'INACTIVE', 'isDeleted' : workplace.status === 'DELETED'}" 
+      v-for="workplace in workplaces" :key="workplace.workplaceId">
         <h3>{{ workplace.businessName }}</h3>
         <p>{{ workplace.businessRegNo }}</p>
         <p>{{ workplace.businessTypeNm }}</p>
         <p>{{ workplace.address }}</p>
+        <div class="workplace-status"><h6>[{{ workplace.status }}]</h6></div>
         <div class="card-buttons">
           <button class="dialog-button secondary" @click="goToEditPage(workplace.workplaceId)">수정</button>
           <button class="dialog-button secondary" @click="goToResourceList(workplace.workplaceId)">자원관리</button>
@@ -101,9 +103,22 @@ onMounted(fetchWorkplaces);
   flex-grow: 1;
   padding: 3px;
 }
+
 @media (min-width: 600px) {
   .effect-button{
     align-self: flex-end;
   }
+}
+
+.isActive {
+  background-color: lightgrey;
+}
+
+.isDeleted {
+  background-color: lightpink;
+}
+
+.workplace-status {
+  display: inline;
 }
 </style>
