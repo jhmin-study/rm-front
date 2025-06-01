@@ -118,6 +118,7 @@ const handleSubmit = async () => {
      return;
    }
 
+  form.value.businessRegNo = form.value.businessRegNo.replace(/[^0-9]/g, '');//'-' 를 빈공백으로 변경
   try {
     if (isEdit.value) {
       await axios.put(`/api/workplace/${props.workplaceId}`, form.value, {headers:{Authorization: localStorage.getItem('token')}});
