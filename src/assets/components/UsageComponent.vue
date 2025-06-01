@@ -2,8 +2,8 @@
   <form class="container" @submit.prevent="onSubmit">
 
     <div class="resourceId">{{ resourceId }}</div>
-    <div class="resource-name">이름: {{ resourceUsageInfo?.resourceName}}</div>
-    <div class="place">위치: {{ resourceUsageInfo?.place }}</div>
+    <div class="resource-name">이름: {{ resourceInfo?.resourceName || usageInfo?.resourceName }} </div>
+    <div class="place">위치: {{resourceInfo?.place || usageInfo?.place }}</div>
       <div class="status">
         <p>상태</p>
         <select v-model="resourceStatus" id="status">
@@ -32,11 +32,13 @@
         <p>비고란</p>
         <textarea v-model="userNote" id="userNote" placeholder="내용을 입력하시오."></textarea>
       </div>
-      <div class="usageSt">
-        <p>사용 시작일 입력</p>
-        <input v-model="usageSt" type="date">
-        <p>사용 종료일 입력</p>
-        <input v-model="usageEd" type="date">
+      <div class="period">
+        <p>사용일 입력</p>
+        <VueDatePicker v-model="selectedRange" range :enable-time-picker="false"
+        placeholder="예약할 날짜 범위 선택"
+        :min-date="new Date()"
+        :disabled-dates="disabledDates"
+        />
       </div>
 
     
@@ -47,28 +49,31 @@
 
 <script setup>
 import axios from "axios";
-import { defineProps,ref } from "vue";
+import { defineProps,onMounted,ref } from "vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const props = defineProps({isEdit:Boolean, resourceUsageInfo:Object})
+const props = defineProps({isEdit:Boolean, usageInfo:Object, resourceInfo:Object})
 
 const resourceId = ref(route.params.resourceId);
+const disabledDates = ref([]);
+  
+onMounted(async()=>{
+  const dis = await axios.get(`http://localhost:8003/api/resource/${route.params.resourceId}/usedDate`)
+  disabledDates.value = dis.data;
+});
 
-const resourceUsageInfo = ref(null);
-
-const resourceStatus = ref(props.isEdit && resourceUsageInfo.value.resourceUsage ? resourceUsageInfo.value.resourceUsage.usageStatus : 'default');
+const resourceStatus = ref((props.isEdit && props.usageInfo.resourceUsage) ? props.usageInfo.resourceUsage.usageStatus : "default");
 const statusErrMsg = ref('');
-const user = ref(props.usageInfo?.resourceUserName);
+const user = ref(props.usageInfo?.resourceUsage.resourceUserName);
 const userErrMsg = ref('');
-const phone = ref(props.usageInfo?.resourceUserPhone);
+const phone = ref(props.usageInfo?.resourceUsage.resourceUserPhone);
 const phoneErrMsg = ref('');
-const email = ref(props.usageInfo?.resourceUserEmail);
-const userNote = ref(props.usageInfo?.resourceUserNote);
-const usageSt = ref(props.usageInfo?.resourceUserNote);
-const usageEd = ref(props.usageInfo?.usageEd);
+const email = ref(props.usageInfo?.resourceUsage.resourceUserEmail);
+const userNote = ref(props.usageInfo?.resourceUsage.resourceUserNote);
+const selectedRange = ref(null)
 
 function onUserInput(e){
   user.value = e.target.value;
@@ -110,6 +115,13 @@ function validPhone(){
   return true;
 }
 
+function formatDateToYMD(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}` ;
+}
+
 function onSubmit(){
   const isStatusValid = validStatus();
   const isUserValidate = validUser();
@@ -125,18 +137,20 @@ function onSubmit(){
 
 async function createUsage(){
   try{
-    let res = await axios.post(`http://localhost:8003/api/usage/${route.params.resourceId}`,{
+    const target = {
       usageStatus:resourceStatus.value,
       resourceUserName:user.value,
       resourceUserPhone:phone.value,
       resourceUserEmail:email.value,
       resourceUserNote:userNote.value,
-      usageSt:usageSt.value,
-      usageEd:usageEd.value
-    })
+      usageSt:formatDateToYMD(selectedRange.value[0]),
+      usageEd:formatDateToYMD(selectedRange.value[1])
+    };
+
+    let res = await axios.post(`http://localhost:8003/api/resource/${route.params.resourceId}/usage`,target)
     if(res.data=="성공"){
       alert("성공!")
-      router.replace('/workplace/:workplaceId')
+      router.replace(`/resource/${route.params.resourceId}`);
     }
   }catch(error){
     alert('오류 발생!');
@@ -151,8 +165,8 @@ async function updateUsage(){
       resourceUserPhone:phone.value,
       resourceUserEmail:email.value,
       resourceUserNote:userNote.value,
-      usageSt:usageSt.value,
-      usageEd:usageEd.value
+      usageSt:formatDateToYMD(selectedRange.value[0]),
+      usageEd:formatDateToYMD(selectedRange.value[1])
     }
   )
     if(res.data=="성공"){
