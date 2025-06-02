@@ -10,9 +10,9 @@
         <p>상태</p>
         <select v-model="resourceStatus" id="status">
           <option disabled value="default">===선택===</option>
-          <option value="reserved">예약</option>
-          <option value="occupied">사용</option>
-          <option value="maintenance">수리</option>
+          <option value="예약">예약</option>
+          <option value="사용중">사용중</option>
+          <option value="수리">수리</option>
         </select>
         <p id="err-msg">{{ statusErrMsg }}</p>
       </div>
@@ -160,7 +160,7 @@ async function createUsage(){
 
 async function updateUsage(){
   try{
-    let res = await axios.put(`http://localhost:8003/api/${route.params.resourceId}`,{
+    let res = await axios.put(`http://localhost:8003/api//usage/${route.params.usageId}`,{
       usageStatus:resourceStatus.value,
       resourceUserName:user.value,
       resourceUserPhone:phone.value,

@@ -59,14 +59,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr  v-for="future in futureUsageInfo" :key="future.usageId">
+        <tr  v-for="future in futureUsageInfo" :key="future.usageId" >
           <td>{{ future.resourceUserName }}</td>
           <td>{{  future.resourceUserPhone }}</td>
           <td>{{ future.resourceUserEmail }}</td>
           <td>{{ future.resourceUserNote }}</td>
           <td>{{ future.usageSt }}</td>
           <td>{{ future.usageEd }}</td>
-          <td><RouterLink :to="`/resource/${resourceId}/update`"><button class="modify-btn">수정</button></RouterLink></td>
+          <td><button @click="onDeleteBtnClick(future.usageId)" class="modify-btn">삭제</button></td>
         </tr>
       </tbody>
     </table>
@@ -77,12 +77,13 @@
 </template>
 
 <script setup>
-
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 
 const resourceId = ref(route.params.resourceId);
 const usageNresourceInfo = ref(null);
@@ -95,7 +96,6 @@ onMounted(
     try{
       let res = await axios.get(`http://localhost:8003/api/resourceUsage/${route.params.resourceId}`)
       usageNresourceInfo.value = res.data;
-      console.log(res.data)
       if(usageNresourceInfo.value =='null'||usageNresourceInfo.value ==''){
         status.value = "Not Found";
         return;
@@ -112,6 +112,23 @@ onMounted(
     }
   }
 )
+
+async function onDeleteBtnClick(id) {
+  try{
+    const confirmResult = confirm("정말 삭제하시겠습니까?");
+    if(confirmResult){
+      const res = await axios.delete(`http://localhost:8003/api/usage/${id}`)
+      if(res == '성공'){
+        alert('삭제되었습니다.');
+        router.replace(`/resource/${route.params.resourceId}`);
+      }else{
+        alert('삭제 실패');
+      }
+    }
+  }catch(err){
+    alert('오류 발생!');
+  }
+}
 
 </script>
 
