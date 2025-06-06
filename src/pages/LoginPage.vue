@@ -20,7 +20,7 @@
       <!-- 하단메뉴 -->
       <div>
         <p>계정이 없으신가요?<RouterLink to="/signup">회원가입</RouterLink></p>
-        <p>비밀번호를 잊으셨나요?<RouterLink>비밀번호 찾기</RouterLink></p>
+        <p>비밀번호를 잊으셨나요?<RouterLink to="/changePassword">비밀번호 찾기</RouterLink></p>
       </div>
     </div>
     <DialogPopup
@@ -49,6 +49,8 @@ const loginErrMsg = ref('');    // 로그인 에러 메시지
 
 const showDialog = ref(false);
 
+const expireTime = ref(null);
+
 // 로그인 처리 함수
 async function submitLogin() {
   
@@ -72,7 +74,12 @@ async function submitLogin() {
     // 토큰을 로컬 스토리지에 저장
     localStorage.setItem('token', res.headers.getAuthorization());
     localStorage.setItem('userId', res.data.userId);
-    
+    // 로컬스토리지 토큰시간 갱신 -> 30분
+    let tmpTime = new Date();
+    tmpTime.setMinutes(tmpTime.getMinutes() + 30);
+    expireTime.value = tmpTime;
+    localStorage.setItem('expireTime', expireTime.value);
+
   } catch (error) {
     // 로그인 실패시 에러메시지 출력
     if (error.response.status == 401) {
