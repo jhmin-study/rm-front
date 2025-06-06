@@ -62,6 +62,8 @@ async function submitLogin() {
 
   // 로그인 처리로직
   // 입력한 ID와 비밀번호를 서버에 전송하여 로그인 처리함.
+  // 2025-06-06 로그인 전 userId를 로컬스토리지에 저장
+  localStorage.setItem('userId', loginId.value);
   try {
     const res = await axios.post('http://localhost:8003/api/login', {
       userId: loginId.value,

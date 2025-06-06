@@ -14,7 +14,9 @@ axios.interceptors.response.use(
     let user = localStorage.getItem('userId')
     let token = localStorage.getItem('token')
 
-    if (user) {
+    console.log('userId : ', user, 'toekn : ', token);
+
+    if (token) {
       console.log('-----------------------------------------------------------------------------')
       let currentAccessToken = token
       console.log('currentAccessToken : ', currentAccessToken)
