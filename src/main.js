@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './routers/index'
 import "./assets/styles/common.css"
 import axios from 'axios'
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 // Add a response interceptor
 axios.interceptors.response.use(
@@ -53,4 +55,4 @@ axios.interceptors.response.use(
   }
 );
 
-createApp(App).use(router).mount('#app')
+createApp(App).component('VueDatePicker', VueDatePicker).use(router).mount('#app')

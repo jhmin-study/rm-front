@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <RouterLink :to="`/resource/${resourceId}`">{{ resource.resourceId }}</RouterLink>
+      <RouterLink :to="`/resource/${resource.resourceId}`">{{ resource.resourceId }}</RouterLink>
     </td>
     <td >
       <input v-if="isNameEditing" type="text" @keydown.enter="onPutRequestEnter('resourceName')" @blur="onNameInputBlur" :value="resourceName" @input="onNameInput">
@@ -21,9 +21,11 @@
     <td>{{ resource.resourceUsage.usageSt }}</td>
     <td>{{ resource.resourceUsage.usageEd }}</td>
     <td v-if="resource.resourceUsage.usageStatus == ''">
-      <RouterLink :to="`/resource/${resource.resourceId}/input`"><button>추가</button></RouterLink>
+      <RouterLink :to="`/resource/${resource.resourceId}/input`"><button class="add-btn">추가</button></RouterLink>
     </td>
-    <td v-else><button>조회</button></td>
+    <td v-else>
+      <RouterLink :to="`/resource/${resource.resourceId}`"><button class="read-btn">조회</button></RouterLink>
+    </td>
   </tr>
 </template>
 
@@ -200,4 +202,56 @@ a {
 
 
 }
+/* 공통 버튼 스타일 */
+.add-btn,
+.read-btn {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* add-btn: 진한 회색 계열로 살짝 강조 */
+.add-btn {
+  background-color: #b0bec5; /* 연한 회색-블루톤 */
+  color: #263238; /* 진한 회색 글씨 */
+  border-color: #90a4ae;
+}
+
+.add-btn:hover {
+  background-color: #90a4ae;
+}
+
+/* read-btn: 더 미니멀하고 은은한 회색 계열 */
+.read-btn {
+  background-color: #e0e0e0;
+  color: #424242;
+  border-color: #bdbdbd;
+}
+
+.read-btn:hover {
+  background-color: #d5d5d5;
+}
+/* 수정용 input 칸 공통 스타일 */
+input[type="text"] {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 95%;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+  border-color: #90a4ae;
+  box-shadow: 0 0 3px rgba(144, 164, 174, 0.5);
+  outline: none;
+}
+
+
 </style>

@@ -23,13 +23,13 @@
         <p>비밀번호를 잊으셨나요?<RouterLink to="/changePassword">비밀번호 찾기</RouterLink></p>
       </div>
     </div>
-    <DialogPopup
-    :visible="showDialog"
-    title="로그인 성공"
-    message="로그인을 성공 했습니다!"
-    button-text="확인"
-    @close="()=>{showDialog=false; router.push('/');}"
-    />
+      <DialogPopup
+      :visible="showDialog"
+      title="로그인 성공"
+      message="로그인을 성공 했습니다!"
+      button-confirm-text="확인"
+      @confirm="()=>{showDialog=false; router.push('/');}"
+      />
   </div>
   
 

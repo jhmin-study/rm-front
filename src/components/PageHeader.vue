@@ -10,7 +10,7 @@
     <div class="user-info">
       
       <div v-if="user!=null" class="user-name">
-        <span>반값습니다! </span>{{ user.userNm }}<sapn>님.</sapn>
+        <span>반값습니다! </span><span @click="onClickUserName">{{ user.userNm }}</span><span>님.</span>
       </div>
       <div class="logout">
         <button @click="logout">로그아웃</button>
@@ -27,9 +27,14 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+const emit = defineEmits(['clickUserName']);
+
 const user   = ref(null);    // 로그인 사용자 객체
 const userId = ref('');
 
+function onClickUserName(){
+  emit('clickUserName');
+}
 
 onMounted(async () => {
   // 로그인 한 사용자 정보 가져오기

@@ -3,7 +3,10 @@
     <div class="dialog-box">
       <h2 class="dialog-title">{{ title }}</h2>
       <p class="dialog-message">{{ message }}</p>
-      <button @click="closeDialog" class="dialog-button">{{ buttonText }}</button>
+      <div class="dialog-button-group">
+        <button @click="onConfirmClick" class="dialog-button">{{ buttonConfirmText }}</button>
+        <button v-if="dialogType == 'confirm'" @click="onCancelClick" class="dialog-button secondary">{{ buttonCancelText }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -20,20 +23,32 @@ defineProps({
       type: String,
       default: '메시지를 입력하세요.'
     },
-    buttonText: {
+    buttonConfirmText: {
       type: String,
       default: '확인'
+    },
+    buttonCancelText: {
+      type: String,
+      default: '취소'
     },
     visible: {
       type: Boolean,
       default: false
+    },
+    dialogType : {
+      type: String,
+      default : 'alert'
     }
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['confirm','cancel']);
 
-function closeDialog(){
-  emit('close');
+function onConfirmClick(){
+  emit('confirm');
+}
+
+function onCancelClick(){
+  emit('cancel');
 }
 
 onMounted(()=>{
@@ -61,6 +76,11 @@ onBeforeUnmount(()=>{
   z-index: 1000;
 }
 
+.dialog-button-group{
+  display: flex;
+  justify-content: center;
+  column-gap: 20px;
+}
 .dialog-box {
   background: white;
   padding: 24px 32px;

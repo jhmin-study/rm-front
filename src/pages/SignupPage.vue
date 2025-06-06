@@ -91,8 +91,8 @@
       :visible="showDialog"
       title="^q^ 회원가입 완료! ^p^"
       message="RM에 회원가입 하신 것을 환영합니다! RM은 사장님의 자원을 효율적으로 관리해줍니다!"
-      button-text="자원 관리하러 가기"
-      @close="()=>{showDialog = false; router.push('/login');}"
+      button-confirm-text="자원 관리하러 가기"
+      @confirm="()=>{showDialog = false; router.push('/login');}"
     />
   </div>
 </template>
