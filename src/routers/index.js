@@ -1,8 +1,6 @@
 import MainPage from "@/pages/MainPage.vue";
 import ResourceListPage from "@/pages/ResourceListPage.vue";
 import UsageInputPage from "@/pages/UsageInputPage.vue";
-//import WorkSpacePage from "@/pages/WorkSpacePage.vue";
-//import WorkPlacePage from "@/pages/WorkPlacePage.vue";
 import { createRouter, createWebHistory  } from "vue-router";
 import WorkplaceList from '@/pages/WorkplaceList.vue';
 import WorkplaceForm from '@/pages/WorkplaceForm.vue';

@@ -2,7 +2,7 @@
   <div class="container">
     <h2>사업장 목록</h2>
 
-     <!-- ✅ 로딩 중일 때 로딩 이미지 표시 -->
+     <!-- 로딩 중일 때 로딩 이미지 표시 -->
      <div v-if="isLoading" class="loading-container">
       <img src="@/assets/loading.gif" alt="로딩 중..." class="loading-image" />
     </div>

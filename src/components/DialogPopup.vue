@@ -52,7 +52,7 @@ function onCancelClick(){
 }
 
 onMounted(()=>{
-  document.body.style.overflow = 'hidden';
+  // document.body.style.overflow = 'hidden';
 });
 
 onBeforeUnmount(()=>{

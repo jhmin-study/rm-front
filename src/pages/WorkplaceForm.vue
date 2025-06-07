@@ -170,7 +170,6 @@ const deleteCancel = () => {
 
 // 삭제
 const deleteWorkplace = async () => {
-  // if (confirm('정말 삭제하시겠습니까?')) {
     try {
       await axios.delete(`/api/workplace/${props.workplaceId}`, {
         headers : {Authorization : localStorage.getItem('token')}
@@ -179,7 +178,6 @@ const deleteWorkplace = async () => {
     } catch (error) {
       console.error('사업장 삭제 중 오류 발생:', error);
     }
-  // }
 };
 </script>
 
