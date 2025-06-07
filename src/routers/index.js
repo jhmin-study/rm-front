@@ -1,8 +1,6 @@
 import MainPage from "@/pages/MainPage.vue";
 import ResourceListPage from "@/pages/ResourceListPage.vue";
 import UsageInputPage from "@/pages/UsageInputPage.vue";
-//import WorkSpacePage from "@/pages/WorkSpacePage.vue";
-//import WorkPlacePage from "@/pages/WorkPlacePage.vue";
 import { createRouter, createWebHistory  } from "vue-router";
 import WorkplaceList from '@/pages/WorkplaceList.vue';
 import WorkplaceForm from '@/pages/WorkplaceForm.vue';
@@ -12,6 +10,7 @@ import UsageReadPage from "@/pages/UsageReadPage.vue";
 import SignupPage from "@/pages/SignupPage.vue";
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 import MyPage from "@/pages/MyPage.vue";
+import ChangePasswordPage from "@/pages/ChangePasswordPage.vue";
 
 
 const routes = [ 
@@ -33,7 +32,8 @@ const routes = [
     },
 
     { path: '/login', component : LoginPage },
-    { path: '/signup', component : SignupPage }
+    { path: '/signup', component : SignupPage },
+    { path: '/changePassword', component : ChangePasswordPage}
 ];
 const router = createRouter({
     history : createWebHistory() , 

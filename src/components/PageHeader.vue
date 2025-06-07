@@ -13,7 +13,7 @@
         <span>반값습니다! </span><span @click="onClickUserName">{{ user.userNm }}</span><span>님.</span>
       </div>
       <div class="logout">
-        <button>로그아웃</button>
+        <button @click="logout">로그아웃</button>
       </div>
     </div>
     
@@ -65,6 +65,18 @@ onMounted(async () => {
   }
 })
 
+function logout() {
+  // 로컬스토리지에서 토큰과 사용자ID 제거
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+
+  // 사용자 정보 초기화
+  user.value = null;
+  userId.value = '';
+
+  // 로그인 페이지로 이동
+  router.push('/login');
+}
 
 </script>
 
