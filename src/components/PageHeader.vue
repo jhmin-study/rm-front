@@ -10,7 +10,7 @@
     <div class="user-info">
       
       <div v-if="user!=null" class="user-name">
-        <span>반값습니다! </span><span @click="onClickUserName">{{ user.userNm }}</span><span>님.</span>
+        <span>반값습니다! </span><span @click="onClickUserName">{{ userNm }}</span><span>님.</span>
       </div>
       <div class="logout">
         <button @click="logout">로그아웃</button>
@@ -31,6 +31,7 @@ const emit = defineEmits(['clickUserName']);
 
 const user   = ref(null);    // 로그인 사용자 객체
 const userId = ref('');
+const userNm = ref('');
 
 function onClickUserName(){
   emit('clickUserName');
@@ -39,6 +40,7 @@ function onClickUserName(){
 onMounted(async () => {
   // 로그인 한 사용자 정보 가져오기
   userId.value = localStorage.getItem('userId');
+  console.log("Header 로그인 정보 가져오기 : ", userId.value)
   if (userId.value) {
     // 사용자 객체 가져오기
     try {
@@ -50,8 +52,14 @@ onMounted(async () => {
         }
       );
       if (res.data) {
+        console.log("Header Axois Result : ", res)
         user.value = res.data;
-        console.log(user);
+        console.log("Header Axoois Result - user: ",user.value);
+        // 성공 시 User이름도 LocalStorege에도 저장
+        if (userNm.value != undefined && userNm.value != null) {
+          userNm.value = user.value.userNm;
+          localStorage.setItem('userNm', userNm.value)
+        }
       } else {
         alert('로그인이 필요합니다.');
         router.push('/login');
@@ -67,9 +75,9 @@ onMounted(async () => {
 
 function logout() {
   // 로컬스토리지에서 토큰과 사용자ID 제거
-  localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-
+  // localStorage.removeItem('token');
+  // localStorage.removeItem('userId');
+  localStorage.clear();
   // 사용자 정보 초기화
   user.value = null;
   userId.value = '';

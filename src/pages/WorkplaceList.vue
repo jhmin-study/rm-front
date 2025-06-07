@@ -1,12 +1,7 @@
 <template>
   <div class="container">
     <h2>사업장 목록</h2>
-
-     <!-- 로딩 중일 때 로딩 이미지 표시 -->
-     <div v-if="isLoading" class="loading-container">
-      <img src="@/assets/loading.gif" alt="로딩 중..." class="loading-image" />
-    </div>
-    <div v-else-if = "workplaces.length == 0">
+    <div v-show = "workplaces.length == 0">
         등록된 사업장이 없습니다. 새로 등록해주세요
     </div>
     <button class="effect-button" @click="goToCreatePage">새 사업장 등록</button>
@@ -26,7 +21,6 @@ import WorkplaceCard from '@/components/WorkplaceCard.vue';
 
 const router = useRouter();
 const workplaces = ref([]);
-const isLoading = ref(true);
 
 // 사업장 목록 조회
 const fetchWorkplaces = async () => {
@@ -36,8 +30,6 @@ const fetchWorkplaces = async () => {
     console.log('📦 받은 데이터:', workplaces.value);
   } catch (error) {
     console.error('사업장 목록 불러오기 중 오류 발생:', error);
-  } finally {
-    isLoading.value = false; // 완료 시 로딩 종료
   }
 };
 
@@ -64,17 +56,6 @@ onMounted(fetchWorkplaces);
   margin-top: 20px;
 }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 0;
-}
-
-.loading-image {
-  width: 60px;
-  height: 60px;
-}
 
 @media (min-width: 600px) {
   .effect-button{
