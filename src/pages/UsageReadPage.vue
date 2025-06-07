@@ -70,6 +70,7 @@
         </tr>
       </tbody>
     </table>
+    <DialogPopup :is-visible="isVisible" title="Success" message="삭제되었습니다." />
   </div>
   <RouterLink :to="`/workplace/${usageNresourceInfo.workplaceId}`"><button class="back-to-list">목록으로</button></RouterLink>
 </main>
@@ -77,13 +78,15 @@
 </template>
 
 <script setup>
+import DialogPopup from '@/components/DialogPopup.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+// impoxrt { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 
+const isVisible = ref(false);
 const route = useRoute();
-const router = useRouter();
+// const router = useRouter();
 
 const resourceId = ref(route.params.resourceId);
 const usageNresourceInfo = ref(null);
@@ -118,9 +121,11 @@ async function onDeleteBtnClick(id) {
     const confirmResult = confirm("정말 삭제하시겠습니까?");
     if(confirmResult){
       const res = await axios.delete(`http://localhost:8003/api/usage/${id}`)
-      if(res == '성공'){
-        alert('삭제되었습니다.');
-        router.replace(`/resource/${route.params.resourceId}`);
+      console.log(id);
+      if(res.data == '성공'){
+        isVisible.value=true;
+        // router.replace(`/resource/${route.params.resourceId}`);
+        futureUsageInfo.value = futureUsageInfo.value.filter((el) => el.usageId != id);
       }else{
         alert('삭제 실패');
       }
