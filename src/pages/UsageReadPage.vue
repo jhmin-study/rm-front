@@ -13,6 +13,7 @@
   </div>
   <div class="place">위치: {{ usageNresourceInfo.place }}</div>
   <div class="button-wrapper">
+    <RouterLink :to="`/resource/${resourceId}/history`"><button class="history-btn">사용자 히스토리 조회</button></RouterLink>
     <RouterLink :to="`/resource/${resourceId}/update`"><button class="edit-btn">사용자 정보 수정</button></RouterLink>
   </div>
   <div class="resource-user" v-if="usageNresourceInfo.resourceUsage">
@@ -66,11 +67,21 @@
           <td>{{ future.resourceUserNote }}</td>
           <td>{{ future.usageSt }}</td>
           <td>{{ future.usageEd }}</td>
-          <td><button @click="onDeleteBtnClick(future.usageId)" class="modify-btn">삭제</button></td>
+          <td><button @click="onDeleteBtnClick" class="modify-btn">삭제</button></td>
+          <DialogPopup
+                  :visible="showDialog"
+                  title="예약자 삭제"
+                  message="정말 삭제하시겠습니까?"
+                  dialog-type="confirm"
+                  button-confirm-text="확인"
+                  button-cancel-text="취소"
+                  @confirm="deleteResourceUser(future.usageId)"
+                  @cancel ="deleteCancel"
+                  />
         </tr>
       </tbody>
     </table>
-    <DialogPopup :is-visible="isVisible" title="Success" message="삭제되었습니다." />
+    <DialogPopup :visible="isVisible" title="Success" message="삭제되었습니다." @confirm="refresh" />
   </div>
   <RouterLink :to="`/workplace/${usageNresourceInfo.workplaceId}`"><button class="back-to-list">목록으로</button></RouterLink>
 </main>
@@ -81,7 +92,7 @@
 import DialogPopup from '@/components/DialogPopup.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-// impoxrt { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 const isVisible = ref(false);
@@ -93,6 +104,17 @@ const usageNresourceInfo = ref(null);
 const futureUsageInfo = ref(null);
 const status = ref("loading");
 const status2 = ref(false);
+const showDialog = ref(false);
+
+const refresh = ()=>{
+  // router.replace(`/resource/${route.params.resourceId}`);
+  // location.reload(true);
+  isVisible.value=false;
+}
+
+const deleteCancel = () => {
+  showDialog.value=false;
+};
 
 onMounted(
   async()=>{
@@ -116,20 +138,23 @@ onMounted(
   }
 )
 
-async function onDeleteBtnClick(id) {
+function onDeleteBtnClick(){
+  showDialog.value=true
+}
+
+async function deleteResourceUser(id) {
   try{
-    const confirmResult = confirm("정말 삭제하시겠습니까?");
-    if(confirmResult){
       const res = await axios.delete(`http://localhost:8003/api/usage/${id}`)
       console.log(id);
       if(res.data == '성공'){
         isVisible.value=true;
+        showDialog.value=false;
         // router.replace(`/resource/${route.params.resourceId}`);
         futureUsageInfo.value = futureUsageInfo.value.filter((el) => el.usageId != id);
       }else{
         alert('삭제 실패');
       }
-    }
+    
   }catch(err){
     alert('오류 발생!');
   }
@@ -161,8 +186,11 @@ body {
 .button-wrapper {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem; /* 버튼 간 여백 */
+  flex-wrap: nowrap;
 }
-.edit-btn {
+.edit-btn, .history-btn {
   background-color: #ffffff;
   border: solid 1px #ddd;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
@@ -175,7 +203,7 @@ body {
   font-size: 0.95rem;
 }
 
-.edit-btn:hover {
+.edit-btn:hover, .history-btn:hover {
   background-color: #43a047;
   color: white;
 }
@@ -312,7 +340,6 @@ a {
   td {
     border-bottom: 1px solid #e5e5e5;
   }
-
 
 }
 .modify-btn {

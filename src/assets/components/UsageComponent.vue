@@ -36,12 +36,27 @@
       </div>
       <div class="period">
         <p>사용일 입력</p>
-        <VueDatePicker v-model="selectedRange" range :enable-time-picker="false"
+        <VueDatePicker v-if="isEdit" v-model="selectedRange" range :enable-time-picker="false"
+        placeholder="예약할 날짜 범위 선택"
+        :min-date="new Date()"
+        :disabled-dates="disabledDatesExceptThis"
+        />
+        <VueDatePicker v-else v-model="selectedRange" range :enable-time-picker="false"
         placeholder="예약할 날짜 범위 선택"
         :min-date="new Date()"
         :disabled-dates="disabledDates"
         />
       </div>
+      <DialogPopup v-if="isEdit" 
+      :visible="isVisible" 
+      title="Success" 
+      message="수정되었습니다." 
+      @confirm="refreshModified" />
+      <DialogPopup v-else
+      :visible="isVisible" 
+      title="Success" 
+      message="추가되었습니다." 
+      @confirm="refreshAdded" />
 
     <button class="submit-btn">{{ isEdit ? '수정' : '추가'}}</button>
     <button @click="onDeleteBtn" class="delete-btn" v-if="isEdit">삭제</button>
@@ -58,12 +73,26 @@ const route = useRoute();
 const router = useRouter();
 const props = defineProps({isEdit:Boolean, usageInfo:Object, resourceInfo:Object})
 
+const isVisible = ref(false);
+const refreshAdded = ()=>{
+  isVisible.value=false;
+}
+const refreshModified = ()=>{
+  isVisible.value=false;
+}
+
 const resourceId = ref(route.params.resourceId);
 const disabledDates = ref([]);
-  
+const disabledDatesExceptThis = ref([]);
+
 onMounted(async()=>{
-  const dis = await axios.get(`http://localhost:8003/api/resource/${route.params.resourceId}/usedDate`)
-  disabledDates.value = dis.data;
+  if(props.isEdit){
+    const disD = await axios.get(`http://localhost:8003/api/resource/${route.params.resourceId}/another/usedDate`);
+    disabledDatesExceptThis.value = disD.data;
+  }else{
+    const dis = await axios.get(`http://localhost:8003/api/resource/${route.params.resourceId}/usedDate`)
+    disabledDates.value = dis.data;
+  }
 });
 
 const resourceStatus = ref((props.isEdit && props.usageInfo.resourceUsage) ? props.usageInfo.resourceUsage.usageStatus : "default");
@@ -147,10 +176,10 @@ async function createUsage(){
       usageSt:formatDateToYMD(selectedRange.value[0]),
       usageEd:formatDateToYMD(selectedRange.value[1])
     };
-
+    
     let res = await axios.post(`http://localhost:8003/api/resource/${route.params.resourceId}/usage`,target)
     if(res.data=="성공"){
-      alert("성공!")
+      isVisible.value=true;
       router.replace(`/resource/${route.params.resourceId}`);
     }
   }catch(error){
@@ -160,7 +189,7 @@ async function createUsage(){
 
 async function updateUsage(){
   try{
-    let res = await axios.put(`http://localhost:8003/api//usage/${route.params.usageId}`,{
+    let res = await axios.put(`http://localhost:8003/api/usage/${props.usageInfo.resourceUsage.usageId}`,{
       usageStatus:resourceStatus.value,
       resourceUserName:user.value,
       resourceUserPhone:phone.value,
@@ -170,8 +199,10 @@ async function updateUsage(){
       usageEd:formatDateToYMD(selectedRange.value[1])
     }
   )
-    if(res.data=="성공"){
-      alert('수정 완료!');
+  console.log(props.usageInfo.resourceUsage.usageId)
+  if(res.data=="성공"){
+    isVisible.value=true;
+    router.replace(`/resource/${route.params.resourceId}`);
     }else{
       alert('수정 실패')
     }
