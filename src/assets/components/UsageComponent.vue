@@ -23,7 +23,7 @@
       </div>
       <div class="phone">
         <p>사용자 전화번호</p>
-        <input @input="onPhoneInput" type="text" :value="phone" placeholder="사용자 전화번호를 입력하시오.">
+        <input @input="onPhoneInput" type="text" :value="phone" placeholder="사용자 전화번호를 입력하시오.(형식: 010-0000-0000)">
         <p id="err-msg">{{ phoneErrMsg }}</p>
       </div>
       <div class="email">
