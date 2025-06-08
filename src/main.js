@@ -22,8 +22,14 @@ axios.interceptors.response.use(
       console.log('currentAccessToken : ', currentAccessToken)
 
       // Header Acesstoken 정보
-      let newAccessToken = response.headers['token']
-      
+      console.log('-----------------------------------------------------------------------------')
+      console.log("response")
+      console.log("response obj : ", response)
+      console.log("response data : ", (response.data).length)
+      console.log('-----------------------------------------------------------------------------')
+      let newAccessToken = response.headers.getAuthorization();
+      console.log("newAccessToken : ", newAccessToken)
+
       // LocalStorage Token 과 Header의 토큰이 같지 않으면 새로 발급받은 토큰을 업데이트 한다.
       if (newAccessToken) {
         console.log('newAccessToken : ', newAccessToken)

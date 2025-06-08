@@ -32,7 +32,7 @@ const userInfo = ref(null);
 async function getUserInfo(){
   //TODO : user id가 없는 경우 확인해야 함. 오류처리 확인해야함
   try{
-    const res = await axios.get(`/api/user/${localStorage.getItem('userId')}`, {
+    const res = await axios.get(`http://localhost:8003/api/user/${localStorage.getItem('userId')}`, {
       headers : {Authorization : localStorage.getItem('token')}
     });
   
