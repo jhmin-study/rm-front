@@ -57,13 +57,11 @@ onMounted(async () => {
         console.log("res.data : ", res.data)
         console.log("res.headers.response : ", res.request.response)
         console.log(localStorage.getItem('token'))
-        let resStr = res.data + "\"}"
-        user.value = JSON.parse(resStr)
-
         console.log("Header Axoois Result - user: ",user.value);
+        user.value = res.data;
         // 성공 시 User이름도 LocalStorege에도 저장
         if (userNm.value != undefined && userNm.value != null) {
-          userNm.value = user.value.userNm;
+          userNm.value = res.data.userNm;
           localStorage.setItem('userNm', userNm.value)
         }
       } else {
