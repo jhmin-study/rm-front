@@ -12,11 +12,11 @@
       <span class="label">가입일</span>
       <span class="value">{{userInfo.signupDt}}</span>
       <span class="label">사업장 수</span>
-      <span class="value">{{'user get 메서드에 사업장 수가 없음'}}</span>
+      <span class="value">{{wkspCnt}}</span>
     </div>
     <div class="button-group">
       <button class="btn update-btn">정보 수정하기</button>
-      <button class="btn password-btn">비밀번호 변경</button>
+      <button @click="moveToChangePassword" class="btn password-btn">비밀번호 변경</button>
     </div>
   </div>
 
@@ -25,10 +25,11 @@
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const userInfo = ref(null);
-
-
+const router = useRouter();
+const wkspCnt = ref(0);
 async function getUserInfo(){
   //TODO : user id가 없는 경우 확인해야 함. 오류처리 확인해야함
   try{
@@ -41,6 +42,17 @@ async function getUserInfo(){
     alert('오류 처리 필요..');
   }
 
+  // 사업장 수 가져오기
+  try {
+    const wkspCntRes = await axios.get(`http://localhost:8003/api/wkspCnt/${localStorage.getItem('userId')}`, {
+      headers: { Authorization: localStorage.getItem('token')}
+    })
+
+    wkspCnt.value = wkspCntRes.data;
+  } catch (error) {
+    console.log('사업장 수 조회 중 오류 발생', error)
+    wkspCnt.value = -1;
+  }
 }
 
 onMounted(()=>{
@@ -48,6 +60,9 @@ onMounted(()=>{
   getUserInfo();
 });
 
+function moveToChangePassword() {
+  router.push('/changePassword')
+}
 
 </script>
 
