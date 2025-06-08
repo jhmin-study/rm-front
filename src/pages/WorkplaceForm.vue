@@ -2,7 +2,11 @@
   <div>
     <h1>{{ isEdit ? '사업장 수정' : '사업장 등록' }}</h1>
     <main>
-      <form class="create-workplace-form" @submit.prevent="handleSubmit">
+      <!-- 로딩 중일 때 로딩 이미지 표시 -->
+      <div v-if="isLoading" class="loading-container">
+        <img src="@/assets/loading.gif" alt="로딩 중..." class="loading-image" />
+      </div>
+      <form v-else class="create-workplace-form" @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="business-type-nm">사업장 유형</label>
           <input v-model="form.businessTypeNm" type="text" id="business-type-nm" placeholder="작업장 유형을 입력하세요.(EX:볼링장, 스터디카페)">
@@ -86,6 +90,7 @@ const props = defineProps({
 
 const isEdit = ref(!!props.workplaceId);
 const showDialog = ref(false); // 다이얼로그 창
+const isLoading = ref(isEdit.value); // 로딩이미지
 
 const form = ref({
   workplaceId: null,
@@ -155,6 +160,8 @@ onMounted(async () => {
       form.value = res.data;
     } catch (e) {
       console.error('데이터 불러오기 실패:', e);
+    } finally {
+      isLoading.value = false; // 완료 시 로딩 종료
     }
   }
 });
@@ -214,6 +221,12 @@ const deleteWorkplace = async () => {
   border: 1px solid #ccc;
   border-radius: 6px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.loading-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-group input:focus,
