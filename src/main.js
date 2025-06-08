@@ -24,7 +24,8 @@ axios.interceptors.response.use(
       // Header Acesstoken 정보
       console.log('-----------------------------------------------------------------------------')
       console.log("response")
-      console.log(response)
+      console.log("response obj : ", response)
+      console.log("response data : ", (response.data).length)
       console.log('-----------------------------------------------------------------------------')
       let newAccessToken = response.headers.getAuthorization();
       console.log("newAccessToken : ", newAccessToken)

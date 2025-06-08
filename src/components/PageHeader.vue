@@ -10,7 +10,7 @@
     <div class="user-info">
       
       <div v-if="user!=null" class="user-name">
-        <span>반값습니다! </span><span @click="onClickUserName">{{ userNm }}</span><span>님.</span>
+        <span>반값습니다! </span><span @click="onClickUserName">{{ user.userNm }}</span><span>님.</span>
       </div>
       <div class="logout">
         <button @click="logout">로그아웃</button>
@@ -29,7 +29,7 @@ const router = useRouter();
 
 const emit = defineEmits(['clickUserName']);
 
-const user   = ref(null);    // 로그인 사용자 객체
+const user   = ref({});    // 로그인 사용자 객체
 const userId = ref('');
 const userNm = ref('');
 
@@ -53,7 +53,13 @@ onMounted(async () => {
       );
       if (res.data) {
         console.log("Header Axois Result : ", res)
-        user.value = res.data;
+        console.log("user Type : ", typeof(res.data))
+        console.log("res.data : ", res.data)
+        console.log("res.headers.response : ", res.request.response)
+        console.log(localStorage.getItem('token'))
+        let resStr = res.data + "\"}"
+        user.value = JSON.parse(resStr)
+
         console.log("Header Axoois Result - user: ",user.value);
         // 성공 시 User이름도 LocalStorege에도 저장
         if (userNm.value != undefined && userNm.value != null) {
