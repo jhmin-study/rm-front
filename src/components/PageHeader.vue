@@ -3,14 +3,14 @@
     <!-- RM 로고(상단 좌측) -->
      <router-link to="/">
        <div class="logo">
-         LOGO
+         RM
        </div>
      </router-link>
     <!-- 접속자 이름, 로그아웃 버튼(상단 우측)  -->
     <div class="user-info">
       
       <div v-if="user!=null" class="user-name">
-        <span>반값습니다! </span><span @click="onClickUserName">{{ user.userNm }}</span><span>님.</span>
+        <span>반갑습니다! </span><span @click="onClickUserName">{{ user.userNm }}</span><span>님.</span>
       </div>
       <div class="logout">
         <button @click="logout">로그아웃</button>
