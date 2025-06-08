@@ -3,7 +3,7 @@
     loading...
   </div>
   <div class="not-found" v-else-if="status=='not found'">
-    Not Found
+    비어있는 History
   </div>
   <main v-else>
     <h3>자원 히스토리</h3>
