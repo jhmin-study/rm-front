@@ -12,6 +12,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.vue";
 import MyPage from "@/pages/MyPage.vue";
 import ChangePasswordPage from "@/pages/ChangePasswordPage.vue";
 import UsageHistory from "@/pages/UsageHistory.vue";
+import WorkplaceFormReg from "@/pages/WorkplaceFormReg.vue";
 
 
 const routes = [ 
@@ -22,7 +23,7 @@ const routes = [
             { path: '', redirect: '/workplaces' }, // 기본 경로 리디렉션
             { path: 'main', component: MainPage },
             { path: 'workplaces', component: WorkplaceList },
-            { path: 'workplace/new', component: WorkplaceForm },
+            { path: 'workplace/new', component: WorkplaceFormReg },
             { path: 'workplace/update/:workplaceId', component: WorkplaceForm, props: true },
             { path: 'workplace/:workplaceId', component: ResourceListPage },
             { path: 'resource/:resourceId', component: UsageReadPage },

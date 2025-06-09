@@ -1,12 +1,8 @@
 <template>
   <div>
-    <h1>{{ isEdit ? '사업장 수정' : '사업장 등록' }}</h1>
+    <h1>사업장 등록록</h1>
     <main>
-      <!-- 로딩 중일 때 로딩 이미지 표시 -->
-      <div v-if="isLoading" class="loading-container">
-        <img src="@/assets/loading.gif" alt="로딩 중..." class="loading-image" />
-      </div>
-      <form v-else class="create-workplace-form" @submit.prevent="handleSubmit">
+      <form class="create-workplace-form" @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="business-type-nm">사업장 유형</label>
           <input v-model="form.businessTypeNm" type="text" id="business-type-nm" placeholder="작업장 유형을 입력하세요.(EX:볼링장, 스터디카페)">
@@ -14,7 +10,7 @@
 
         <div class="form-group">
           <label for="business-reg-no">사업자 번호</label>
-          <input v-model="form.businessRegNo" type="text" id="business-reg-no" placeholder="사업자 번호를 입력하세요." class="readonly-text" readonly>
+          <input v-model="form.businessRegNo" type="text" id="business-reg-no" placeholder="사업자 번호를 입력하세요.">
         </div>
 
         <div class="form-group">
@@ -53,44 +49,19 @@
         </div>
 
         <div class="form-group btn-group">
-          <button type="submit" class="effect-button">{{ isEdit ? '수정하기' : '작업장 만들기' }}</button>
-          <button v-if="isEdit" type="button" class="effect-button delete-button"
-          @click="deleteConfirm()">삭제하기</button>
+          <button type="submit" class="effect-button">작업장 만들기</button>
         </div>
       </form>
     </main>
-    <DialogPopup
-            :visible="showDialog"
-            title="사업장 삭제"
-            message="정말 삭제하시겠습니까?"
-            dialog-type="confirm"
-            button-confirm-text="확인"
-            button-cancel-text="취소"
-            @confirm="deleteWorkplace()"
-            @cancel ="deleteCancel"
-            />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router'; // ✅ 추가
 import axios from 'axios';
-import DialogPopup from '@/components/DialogPopup.vue';
 
 const router = useRouter(); // ✅ 추가
-
-// ✅ 라우터에서 props로 넘어온 workplaceId 받기
-const props = defineProps({
-  workplaceId: {
-    type: String,
-    required: false
-  }
-});
-
-const isEdit = ref(!!props.workplaceId);
-const showDialog = ref(false); // 다이얼로그 창
-const isLoading = ref(isEdit.value); // 로딩이미지
 
 const form = ref({
   workplaceId: null,
@@ -137,12 +108,7 @@ const handleSubmit = async () => {
 
   form.value.businessRegNo = form.value.businessRegNo.replace(/[^0-9]/g, '');//'-' 를 빈공백으로 변경
   try {
-    if (isEdit.value) {
-      await axios.put(`/api/workplace/${props.workplaceId}`, form.value, {headers:{Authorization: localStorage.getItem('token')}});
-    } else {
       await axios.post('/api/workplace', form.value, {headers:{Authorization: localStorage.getItem('token')}});
-    }
-
     router.push('/workplaces'); // ✅ 작업장 목록으로 이동
   } catch (error) {
     console.error('저장 오류:', error);
@@ -150,42 +116,6 @@ const handleSubmit = async () => {
   }
 };
 
-onMounted(async () => {
-  if (isEdit.value) {
-    try {
-      const res = await axios.get(`/api/workplace/${props.workplaceId}`, {
-        headers : {Authorization : localStorage.getItem('token')}
-      });
-      console.log(res.data);
-      form.value = res.data;
-    } catch (e) {
-      console.error('데이터 불러오기 실패:', e);
-    } finally {
-      isLoading.value = false; // 완료 시 로딩 종료
-    }
-  }
-});
-
-// 삭제 confirm 창 보이기
-const deleteConfirm = () => {
-  showDialog.value=true;
-};
-
-const deleteCancel = () => {
-  showDialog.value=false;
-};
-
-// 삭제
-const deleteWorkplace = async () => {
-    try {
-      await axios.delete(`/api/workplace/${props.workplaceId}`, {
-        headers : {Authorization : localStorage.getItem('token')}
-      });
-      router.push('/workplaces');
-    } catch (error) {
-      console.error('사업장 삭제 중 오류 발생:', error);
-    }
-};
 </script>
 
 <style scoped>
@@ -278,11 +208,5 @@ h1 {
   h1 {
     font-size: 24px;
   }
-}
-
-.readonly-text {
-  padding: 4px;
-  background-color: #f5f5f5;
-  display: inline-block;
 }
 </style>
