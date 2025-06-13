@@ -29,6 +29,11 @@
         </div>
 
         <div class="form-group">
+          <label for="business-start-dt">사업 시작일자</label>
+          <input v-model="form.businessStartDt" type="text" id="business-start-dt" placeholder="사업 시작일자 입력하세요. (YYYYMMDD)">
+        </div>
+        
+        <div class="form-group">
           <label for="address">사업장 주소</label>
           <input v-model="form.address" type="text" id="address" placeholder="사업장 주소를 입력하세요.">
         </div>
@@ -72,17 +77,53 @@ const form = ref({
   phoneNumber: '',
   ownerName: '',
   detailAddress: '',
-  status: ''
+  status: '',
+  businsessStartDt: ''
 });
 
    const serviceKey = 'ptjf2sY3Y2xVYb2lSqJFg19EwvV4IytfAnfp4xnNJoXN4J9ofsAjYaqUVZ4Q9WyIxUBua14fRQuX6AP6VThCVQ%3D%3D'; // 실제 키로 교체
 
    const validateBusinessNumber = async () => {
      const cleanedNumber = form.value.businessRegNo.replace(/[^0-9]/g, '');
-     const data = { b_no: [cleanedNumber] };
+     const data = 
+      {
+        "businesses": [
+        {
+          b_no: [cleanedNumber],
+          start_dt: form.value.businsessStartDt,
+          p_nm: form.value.ownerName,
+          p_nm2: form.value.ownerName,
+          b_nm: form.value.businessName,
+          corp_no: "", // 법인등록번호
+          b_sector: "",
+          b_type: "",
+          b_adr: ""
+        }
+      ]
+      }
+
+      /* 
+      // 테스트 데이터
+      {
+        "businesses": [
+        {
+          b_no: "0000000000",
+          start_dt: "20000101",
+          p_nm: "홍길동",
+          p_nm2: "홍길동",
+          b_nm: "(주)테스트",
+          corp_no: "0000000000000",
+          b_sector: "",
+          b_type: "",
+          b_adr: ""
+        }
+      ]
+      }
+      */
+    
      try {
        const res = await axios.post(
-         `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${serviceKey}`,
+         `https://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=${serviceKey}`,
          data,
          {
            headers: {
@@ -92,7 +133,7 @@ const form = ref({
          }
        );
        console.log(res.data);
-       return res.data.data[0]?.b_stt === '계속사업자';
+       return res.data.data[0]?.status.b_stt === '계속사업자'; // 리턴값 확인 필요
      } catch (e) {
        console.error('유효성 검사 오류:', e);
        return false;
@@ -101,6 +142,8 @@ const form = ref({
 
 const handleSubmit = async () => {
    const valid = await validateBusinessNumber();
+   console.log(valid);
+
    if (!valid) {
      alert('유효하지 않은 사업자등록번호입니다.');
      return;
@@ -166,6 +209,23 @@ const handleSubmit = async () => {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
+.custom-input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 아이콘과 겹치지 않게 오른쪽 패딩 추가 */
+.custom-date-input {
+  padding-right: 100px; /* 아이콘 공간 확보 */
+  padding-left: 100px;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .effect-button {
   width: 100%;
   padding: 14px 20px;
@@ -209,4 +269,5 @@ h1 {
     font-size: 24px;
   }
 }
+
 </style>

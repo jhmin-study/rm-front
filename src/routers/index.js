@@ -13,6 +13,7 @@ import MyPage from "@/pages/MyPage.vue";
 import ChangePasswordPage from "@/pages/ChangePasswordPage.vue";
 import UsageHistory from "@/pages/UsageHistory.vue";
 import WorkplaceFormReg from "@/pages/WorkplaceFormReg.vue";
+import WorkplaceFormRegNew from "@/pages/WorkplaceFormRegNew.vue";
 
 
 const routes = [ 
@@ -24,6 +25,7 @@ const routes = [
             { path: 'main', component: MainPage },
             { path: 'workplaces', component: WorkplaceList },
             { path: 'workplace/new', component: WorkplaceFormReg },
+            { path: 'workplace/newReal', component: WorkplaceFormRegNew }, // 사업자번호 진위여부 API 호출
             { path: 'workplace/update/:workplaceId', component: WorkplaceForm, props: true },
             { path: 'workplace/:workplaceId', component: ResourceListPage },
             { path: 'resource/:resourceId', component: UsageReadPage },
